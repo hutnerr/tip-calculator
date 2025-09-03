@@ -1,9 +1,12 @@
 package com.hbtipcalc.tipcalculator;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,6 +20,11 @@ import com.hbtipcalc.tipcalculator.math.TipResult;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView output;
+    TextView tipLabel;
+    EditText billInput;
+    SeekBar tipInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,36 +36,76 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button btn = findViewById(R.id.CalcButton);
-        TextView output = findViewById(R.id.Output);
-        EditText billInput = findViewById(R.id.BillAmountInput);
-        EditText tipInput = findViewById(R.id.TipAmountInput);
+        this.output = findViewById(R.id.Output);
+        this.tipLabel = findViewById(R.id.TipLabel);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        this.billInput = findViewById(R.id.BillAmountInput);
+        this.tipInput = findViewById(R.id.TipSeekBar);
+
+        tipLabel.setText(String.format("Tip Amount: %d%%", tipInput.getProgress()));
+
+        tipInput.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                tipLabel.setText(String.format("Tip Amount: %d%%", progress));
+                temp();
+            }
+
             @Override
-            public void onClick(View v) {
-//                String inAmount = "100";
-//                int tipPercent = 20;
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
-                String inAmount = billInput.getText().toString().trim();
-                String tipPercentString = tipInput.getText().toString().trim();
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
-                if (inAmount.length() == 0 || tipPercentString.length() == 0)
-                {
-                    // instead of returning here, the object should be highlighted
-                    // to show that it needs to be filled or something
-                    return;
-                }
+        billInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Runs before text changes (rarely needed)
+            }
 
-                int tipPercent = Integer.parseInt(tipPercentString);
-                TipResult result = Calculator.calculate(inAmount, tipPercent, Calculator.RoundFlag.NONE);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                temp();
+            }
 
-                String outputString = String.format("Bill Amount: \t\t\t%s" +
-                        "\nTip Amount: \t\t\t%s" +
-                        "\nTotal Amount: \t%s", inAmount, result.getFormattedTip(), result.getFormattedTotal());
-
-                output.setText(outputString);
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Runs after the text has changed
+                String currentText = s.toString();
+                // Do something with currentText
             }
         });
+
+        // make a app class to contain some internal vars
+        // make a settings class which the app contains. store default tip, etc.
+        // make a info class which stores like activeBill, tip, etc...
+        // instead of a calculate button, have a on change listener for the text input and the slider
+        // then call updateInfo on that (update the info in the app)
+        // then call displayInfo and pass it the updated info (displays the apps info)
+
+        // implement the split bill at the end
+    }
+
+    private void temp()
+    {
+        String inAmount = billInput.getText().toString().trim();
+
+        if (inAmount.length() == 0)
+        {
+            output.setText("");
+            // instead of returning here, the object should be highlighted
+            // to show that it needs to be filled or something
+            return;
+        }
+
+        int tipPercent = tipInput.getProgress();
+        TipResult result = Calculator.calculate(inAmount, tipPercent, Calculator.RoundFlag.NONE);
+
+        String outputString = String.format("Bill Amount: $%s" +
+                "\n  Tip Amount: %s" +
+                "\n Total Amount: %s", inAmount, result.getFormattedTip(), result.getFormattedTotal());
+
+        output.setText(outputString);
     }
 }
