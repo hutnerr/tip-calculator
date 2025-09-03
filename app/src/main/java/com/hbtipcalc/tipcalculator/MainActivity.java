@@ -102,9 +102,8 @@ public class MainActivity extends AppCompatActivity {
         int tipPercent = tipInput.getProgress();
         TipResult result = Calculator.calculate(inAmount, tipPercent, Calculator.RoundFlag.NONE);
 
-        String outputString = String.format("Bill Amount: $%s" +
-                "\n  Tip Amount: %s" +
-                "\n Total Amount: %s", inAmount, result.getFormattedTip(), result.getFormattedTotal());
+        String outputString = String.format("Tip Amount: %s" +
+                "\n Total Amount: %s", result.getFormattedTip(), result.getFormattedTotal());
 
         output.setText(outputString);
     }
