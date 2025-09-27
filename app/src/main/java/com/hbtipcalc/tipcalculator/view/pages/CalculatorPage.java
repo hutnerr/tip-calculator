@@ -15,6 +15,7 @@ import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
+import com.hbtipcalc.tipcalculator.view.elements.KeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
 
 public class CalculatorPage extends BasePage {
@@ -24,6 +25,8 @@ public class CalculatorPage extends BasePage {
     private Header header;
     private IconButton splitBtn;
     private IconButton settingsBtn;
+    private TextView tipResults;
+    private TextView totalResults;
 
     public CalculatorPage(Context ctx)
     {
@@ -104,13 +107,22 @@ public class CalculatorPage extends BasePage {
         layout.addView(container);
 
         // listener updates the value
+        // FIXME: I changed this so it can have multiple listeners, so this needs to me changed
         slider.setOnSliderChangeListener(progress -> { container.setValue(progress + "%"); });
         container.setValue(slider.getProgress() + "%"); // set initially
     }
 
     private void generateResultsField()
     {
-        // FIXME: fill out
-    }
+        // this is the container for both of them
+        LinearLayout resultsContainer = new LinearLayout(ctx);
+        resultsContainer.setOrientation(LinearLayout.VERTICAL);
 
+        resultsContainer.addView(new KeyValueText(ctx, "Tip Amount", "0.54", true));
+        resultsContainer.addView(new KeyValueText(ctx, "Total Amount", "5.42", true));
+
+        // TODO: these need to be added to the sliders listeners so the values can be changes.
+
+        layout.addView(resultsContainer);
+    }
 }

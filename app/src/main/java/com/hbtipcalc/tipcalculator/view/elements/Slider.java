@@ -8,7 +8,11 @@ import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 
 import android.widget.SeekBar;
 
+import java.util.List;
+
 public class Slider extends LinearLayout {
+    private List<SliderObserver> observers;
+
     private SeekBar seekBar;
     private OnSliderChangeListener listener;
 
@@ -55,7 +59,7 @@ public class Slider extends LinearLayout {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
-            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) { notifyListener(); }
+            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) { alertObservers(progress); }
 
             @Override
             public void onStartTrackingTouch(SeekBar sb) {}
@@ -65,28 +69,50 @@ public class Slider extends LinearLayout {
         });
     }
 
-    public void setProgress(int value) {
+    public void setProgress(int value)
+    {
         if (value < 0) value = 0;
         if (value > seekBar.getMax()) value = seekBar.getMax();
         seekBar.setProgress(value);
-        notifyListener();
+        alertObservers(value);
     }
 
     public int getProgress() {
         return seekBar.getProgress();
     }
 
-    public void setBounds(int max, boolean reset) {
+    public void setBounds(int max, boolean reset)
+    {
         seekBar.setMax(max);
         if (reset) seekBar.setProgress(max / 2);
     }
 
-    public void setColor(int color) {
+    public void setColor(int color)
+    {
         seekBar.getProgressDrawable().setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
         seekBar.getThumb().setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
-    private void notifyListener() {
-        if (listener != null) listener.onProgressChanged(seekBar.getProgress());
+    public void alertObservers(int newValue)
+    {
+        for (SliderObserver obs : observers)
+        {
+            obs.handleSliderChange(newValue);
+        }
     }
+
+    public void removeObserver(SliderObserver obs)
+    {
+        observers.remove(obs);
+    }
+
+    public void addObserver(SliderObserver obs)
+    {
+        if (obs != null && !observers.contains(obs))
+        {
+            observers.add(obs);
+        }
+    }
+
+
 }
