@@ -14,6 +14,9 @@ public class Calculator {
         DOWN
     }
 
+    /**
+     * Static helper class. We don't need to instantiate.
+     */
     private Calculator() {}
 
     /**
@@ -52,7 +55,6 @@ public class Calculator {
         BigDecimal tipAmount = inAmount.multiply(tipPercent).setScale(2, RoundingMode.HALF_UP);
         return tipAmount;
     }
-
 
     private static BigDecimal calculateTotal(BigDecimal inAmount, BigDecimal tipAmount, RoundFlag roundingFlag)
     {

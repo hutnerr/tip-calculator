@@ -27,20 +27,20 @@ public class Header extends LinearLayout {
         ));
         setPadding(20, 20, 20, 20);
         setBackgroundColor(StyleConstants.COLOR_ACCENT);
-        setGravity(Gravity.CENTER_VERTICAL);
+        setGravity(Gravity.CENTER_VERTICAL); // centered within the container
 
+        // the title bar for the header itself
         titleView = new TextView(ctx);
         titleView.setText(title);
         titleView.setTextSize(StyleConstants.FONT_TITLE);
-        titleView.setTextColor(StyleConstants.COLOR_TEXT);
+        titleView.setTextColor(StyleConstants.COLOR_HEADER);
         titleView.setTypeface(StyleConstants.MONOSPACE);
-
         LayoutParams titleParams = new LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f
         );
         titleView.setLayoutParams(titleParams);
 
-        // rightContainer for the right buttons
+        // container for the icon buttons
         buttonContainer = new LinearLayout(ctx);
         buttonContainer.setOrientation(HORIZONTAL);
         buttonContainer.setGravity(Gravity.END);
@@ -49,21 +49,11 @@ public class Header extends LinearLayout {
         addView(buttonContainer);
     }
 
-    /**
-     * Sets the title of the Header.
-     *
-     * @param title The new title
-     */
     public void setTitle(String title)
     {
         titleView.setText(title);
     }
 
-    /**
-     * Adds an icon Button to the header
-     *
-     * @param button The button to add
-     */
     public void addIconButton(IconButton button)
     {
         buttonContainer.addView(button);

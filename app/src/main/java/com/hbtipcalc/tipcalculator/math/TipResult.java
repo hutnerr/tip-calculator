@@ -17,7 +17,6 @@ public class TipResult {
     {
         return this.tip;
     }
-
     public BigDecimal getTotal()
     {
         return this.total;
@@ -27,7 +26,6 @@ public class TipResult {
     {
         return String.format("$%.2f", tip);
     }
-
     public String getFormattedTotal()
     {
         return String.format("$%.2f", total);

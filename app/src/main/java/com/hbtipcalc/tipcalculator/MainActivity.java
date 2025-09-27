@@ -2,12 +2,12 @@ package com.hbtipcalc.tipcalculator;
 
 import android.os.Bundle;
 import android.view.ViewGroup;
-import androidx.activity.EdgeToEdge;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
-import com.hbtipcalc.tipcalculator.view.pages.Calculator;
+import com.hbtipcalc.tipcalculator.view.pages.CalculatorPage;
 
 /**
  * This is the entry point of the app.
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         rootLayout.setBackgroundColor(StyleConstants.COLOR_BACKGROUND);
 
         setContentView(rootLayout);
-        setPage(new Calculator(this)); // out home page is the calculator
+        setPage(new CalculatorPage(this)); // out home page is the calculator
     }
 
     /**
