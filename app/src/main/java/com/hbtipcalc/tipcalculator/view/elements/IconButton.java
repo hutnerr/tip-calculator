@@ -11,14 +11,15 @@ import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 
 public class IconButton extends AppCompatImageButton
 {
-    public IconButton(Context context) {
+    public IconButton(Context context)
+    {
         super(context);
 
         setBackground(null); // remove ripple/gray background
         setAdjustViewBounds(true);
         setScaleType(ScaleType.CENTER_INSIDE);
 
-        // Force standard touch size (48dp square)
+        // set to a static size
         int size = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics()
         );
@@ -34,7 +35,7 @@ public class IconButton extends AppCompatImageButton
     public void setIcon(int resID)
     {
         setImageResource(resID);
-        setIconColor(StyleConstants.COLOR_TEXT);
+        setIconColor(StyleConstants.COLOR_HEADER);
     }
 
     public void setIconColor(int color)
