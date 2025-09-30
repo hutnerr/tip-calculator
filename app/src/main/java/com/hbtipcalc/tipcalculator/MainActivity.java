@@ -5,6 +5,9 @@ import android.view.ViewGroup;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.Settings;
 import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
 import com.hbtipcalc.tipcalculator.view.pages.Calculator;
@@ -29,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
         rootLayout.setBackgroundColor(StyleConstants.COLOR_BACKGROUND);
+
+        // this is how you can access the app
+//        CalculatorApp app = (CalculatorApp) getApplication();
+//        Settings settings = app.getSettings();
+//        CTheme theme = app.getCTheme();
 
         setContentView(rootLayout);
         setPage(new Calculator(this)); // out home page is the calculator
