@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.R;
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
+import com.hbtipcalc.tipcalculator.controllers.Calculator;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
@@ -21,16 +23,22 @@ import com.hbtipcalc.tipcalculator.view.elements.Slider;
 public class CalculatorPage extends BasePage {
 
     private LinearLayout layout;
-
     private Header header;
     private IconButton splitBtn;
     private IconButton settingsBtn;
     private TextView tipResults;
     private TextView totalResults;
 
+    private CTheme t;
+    private Calculator calculator;
+
     public CalculatorPage(Context ctx)
     {
         super(ctx);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        this.t = app.getCTheme();
+        this.calculator = app.getCalculator();
 
         layout = new LinearLayout(ctx);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -90,7 +98,7 @@ public class CalculatorPage extends BasePage {
     {
         EditText input = new EditText(ctx);
         input.setBackground(null); // remove the default bg
-        input.setTextColor(StyleConstants.COLOR_TEXT);
+        input.setTextColor(t.getTextColor());
         // for now allow these inputs instead of static numbers
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         ElementContainer container = new ElementContainer(ctx, "Bill Amount", input);
@@ -106,9 +114,8 @@ public class CalculatorPage extends BasePage {
         ElementContainer container = new ElementContainer(ctx, "Tip Percent", slider);
         layout.addView(container);
 
-        // listener updates the value
-        // FIXME: I changed this so it can have multiple listeners, so this needs to me changed
-        slider.setOnSliderChangeListener(progress -> { container.setValue(progress + "%"); });
+        slider.addObserver(container);
+        slider.addObserver(this.calculator);
         container.setValue(slider.getProgress() + "%"); // set initially
     }
 
@@ -120,9 +127,20 @@ public class CalculatorPage extends BasePage {
 
         resultsContainer.addView(new KeyValueText(ctx, "Tip Amount", "0.54", true));
         resultsContainer.addView(new KeyValueText(ctx, "Total Amount", "5.42", true));
-
-        // TODO: these need to be added to the sliders listeners so the values can be changes.
+        // TODO: I should create 2 subclasses of this. One of the tip amount, one for the total amount
+        // and they implement the CalculatorObserver differently.
 
         layout.addView(resultsContainer);
     }
 }
+
+// I think I want to make a general Observer interface that I can use more easily.
+// maybe with Generics
+
+// I also want to keep my more generic design.
+// So for the thing that implements the listen to slider interface, it should be a separate object
+// because not all of them are going to want to listen to a slider in that way for example
+// maybe SliderContainer or something
+
+// I also want to extend EditText to make my own TextBox so I can create my own custom observers for that
+// as well.

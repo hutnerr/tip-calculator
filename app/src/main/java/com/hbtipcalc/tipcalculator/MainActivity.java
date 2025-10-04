@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.Settings;
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
 import com.hbtipcalc.tipcalculator.view.pages.CalculatorPage;
 
@@ -31,12 +30,12 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
-        rootLayout.setBackgroundColor(StyleConstants.COLOR_BACKGROUND);
+        rootLayout.setBackgroundColor(((CalculatorApp) getApplication()).getCTheme().getBackgroundColor());
 
         // this is how you can access the app
-//        CalculatorApp app = (CalculatorApp) getApplication();
-//        Settings settings = app.getSettings();
-//        CTheme theme = app.getCTheme();
+        // CalculatorApp app = (CalculatorApp) getApplication();
+        // Settings settings = app.getSettings();
+        // CTheme theme = app.getCTheme();
 
         setContentView(rootLayout);
         setPage(new CalculatorPage(this)); // out home page is the calculator
@@ -47,8 +46,17 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param page The page object we want the view to be now.
      */
-    public void setPage(BasePage page) {
+    public void setPage(BasePage page)
+    {
         rootLayout.removeAllViews();
         rootLayout.addView(page.getView());
+    }
+
+    /**
+     * Reloads the activity. Used when UI changes, etc...
+     */
+    public void reload()
+    {
+        recreate();
     }
 }

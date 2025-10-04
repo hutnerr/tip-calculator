@@ -1,13 +1,87 @@
 package com.hbtipcalc.tipcalculator.models;
 
-public class CTheme
+import android.graphics.Color;
+import android.graphics.Typeface;
+
+public enum CTheme
 {
-    // this needs to track the current "theme"
-    // likely move the StyleConstants to this
+    GRUVBOX(
+            Color.parseColor("#ebdbb2"),
+            Color.parseColor("#282828"),
+            Color.parseColor("#282828"),
+            Color.parseColor("#504945"),
+            Color.parseColor("#fabd2f")
+    ),
 
-    // can have enums of this maybe which are different presets?
+    SOLARIZED_DARK(
+            Color.parseColor("#839496"),
+            Color.parseColor("#002b36"),
+            Color.parseColor("#002b36"),
+            Color.parseColor("#073642"),
+            Color.parseColor("#b58900")
+    ),
 
-    // will have to be made
+    DRACULA(
+            Color.parseColor("#f8f8f2"),
+            Color.parseColor("#282a36"),
+            Color.parseColor("#282a36"),
+            Color.parseColor("#44475a"),
+            Color.parseColor("#bd93f9")
+    ),
 
-    // maybe this can be a singleton so anyone can access it
+    NORD(
+            Color.parseColor("#d8dee9"),
+            Color.parseColor("#2e3440"),
+            Color.parseColor("#2e3440"),
+            Color.parseColor("#3b4252"),
+            Color.parseColor("#88c0d0")
+    ),
+
+    MONOKAI(
+            Color.parseColor("#f8f8f2"),
+            Color.parseColor("#272822"),
+            Color.parseColor("#272822"),
+            Color.parseColor("#3e3d32"),
+            Color.parseColor("#f92672")
+    ),
+
+    EARTH(
+            Color.parseColor("#e0e2db"),
+            Color.parseColor("#2e3d2f"),
+            Color.parseColor("#1f2d20"),
+            Color.parseColor("#3a4b3c"),
+            Color.parseColor("#8f9779")
+    );
+
+
+    // color vars
+    private final int text;
+    private final int header;
+    private final int background;
+    private final int backgroundSec;
+    private final int accent;
+
+    // font styling
+    private static final Typeface FONT = Typeface.MONOSPACE;
+    private static final float TITLE_FS = 24f;
+    private static final float TEXT_FS = 16f;
+
+    CTheme(int text, int header, int background, int backgroundSec, int accent)
+    {
+        this.text = text;
+        this.header = header;
+        this.background = background;
+        this.backgroundSec = backgroundSec;
+        this.accent = accent;
+    }
+
+    public int getTextColor() { return this.text; }
+    public int getHeaderColor() { return this.header; }
+    public int getBackgroundColor() { return this.background; }
+    public int getBackgroundSecColor() { return this.backgroundSec; }
+    public int getAccentColor() { return this.accent; }
+
+    public Typeface getFont() { return FONT; }
+    public float getTileFontSize() { return TITLE_FS; }
+    public float getTextFontSize() { return TEXT_FS; }
 }

@@ -5,12 +5,15 @@ import android.graphics.Paint;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
+import com.hbtipcalc.tipcalculator.controllers.CalculatorObserver;
+import com.hbtipcalc.tipcalculator.math.TipResult;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
 public class KeyValueText extends LinearLayout
 {
-    private TextView label;
-    private TextView value;
+    private final TextView label;
+    private final TextView value;
 
     public KeyValueText(Context ctx)
     {
@@ -20,20 +23,24 @@ public class KeyValueText extends LinearLayout
     public KeyValueText(Context ctx, String labelText, String initialValue, boolean stretch)
     {
         super(ctx);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        CTheme t = app.getCTheme();
+
         setOrientation(LinearLayout.HORIZONTAL); // we want Key: Value (or similar)
         setPadding(60, 20, 60, 10);
 
         this.label = new TextView(ctx);
         this.label.setText(labelText);
-        this.label.setTextColor(StyleConstants.COLOR_ACCENT);
-        this.label.setTextSize(StyleConstants.FONT_TEXT);
-        this.label.setTypeface(StyleConstants.MONOSPACE);
+        this.label.setTextColor(t.getAccentColor());
+        this.label.setTextSize(t.getTextFontSize());
+        this.label.setTypeface(t.getFont());
 
         this.value = new TextView(ctx);
         this.value.setText(initialValue);
-        this.value.setTextColor(StyleConstants.COLOR_TEXT);
-        this.value.setTextSize(StyleConstants.FONT_TITLE);
-        this.value.setTypeface(StyleConstants.MONOSPACE);
+        this.value.setTextColor(t.getTextColor());
+        this.value.setTextSize(t.getTileFontSize());
+        this.value.setTypeface(t.getFont());
 
         if (stretch)
         {

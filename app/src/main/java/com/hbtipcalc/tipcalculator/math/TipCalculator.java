@@ -1,23 +1,21 @@
 package com.hbtipcalc.tipcalculator.math;
 
+import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class Calculator {
+/**
+ * Static class for the math behind the calculations.
+ */
+public class TipCalculator {
 
     private static final BigDecimal DIVISOR = new BigDecimal("100");
-
-    public enum RoundFlag
-    {
-        NONE,
-        UP,
-        DOWN
-    }
 
     /**
      * Static helper class. We don't need to instantiate.
      */
-    private Calculator() {}
+    private TipCalculator() {}
 
     /**
      * Calculates an outcome using a dollar amount and a tip percentage.
@@ -27,7 +25,7 @@ public class Calculator {
      * @param roundingFlag to round after calculating the tip? RoundFlag.None, Up, Down
      * @return TipResult containing the tip amount and the total amount
      */
-    public static TipResult calculate(BigDecimal inAmount, int tip, RoundFlag roundingFlag)
+    public static TipResult calculate(BigDecimal inAmount, int tip, RoundingFlag roundingFlag)
     {
         if (inAmount.compareTo(BigDecimal.ZERO) < 0)
         {
@@ -44,7 +42,7 @@ public class Calculator {
         return new TipResult(tipAmount, total);
     }
 
-    public static TipResult calculate(String inAmount, int tip, RoundFlag roundingFlag)
+    public static TipResult calculate(String inAmount, int tip, RoundingFlag roundingFlag)
     {
         return calculate(new BigDecimal(inAmount), tip, roundingFlag);
     }
@@ -56,7 +54,7 @@ public class Calculator {
         return tipAmount;
     }
 
-    private static BigDecimal calculateTotal(BigDecimal inAmount, BigDecimal tipAmount, RoundFlag roundingFlag)
+    private static BigDecimal calculateTotal(BigDecimal inAmount, BigDecimal tipAmount, RoundingFlag roundingFlag)
     {
         BigDecimal total = inAmount.add(tipAmount);
 
@@ -69,6 +67,9 @@ public class Calculator {
                 break;
             case DOWN:
                 total = total.setScale(0, RoundingMode.FLOOR);
+                break;
+            case DYNAMIC:;
+                // TODO: FILL THIS OUT
                 break;
         }
         return total;

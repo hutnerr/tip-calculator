@@ -1,6 +1,8 @@
 package com.hbtipcalc.tipcalculator.models;
 
+import com.hbtipcalc.tipcalculator.math.TipCalculator;
+
 public class Settings
 {
-    // maybe this can be a singleton so anyone can access settings
+    // use the theme enum and the rounding flag enum
 }

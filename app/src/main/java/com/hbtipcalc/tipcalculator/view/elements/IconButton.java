@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.graphics.drawable.DrawableCompat;
 
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
 public class IconButton extends AppCompatImageButton
 {
-    public IconButton(Context context)
+    public IconButton(Context ctx)
     {
-        super(context);
+        super(ctx);
 
         setBackground(null); // remove ripple/gray background
         setAdjustViewBounds(true);
@@ -26,16 +27,16 @@ public class IconButton extends AppCompatImageButton
         setLayoutParams(new ViewGroup.LayoutParams(size, size));
     }
 
-    public IconButton(Context context, int resID)
+    public IconButton(Context ctx, int resID)
     {
-        this(context);
+        this(ctx);
         setIcon(resID);
     }
 
     public void setIcon(int resID)
     {
         setImageResource(resID);
-        setIconColor(StyleConstants.COLOR_HEADER);
+        setIconColor(((CalculatorApp) getContext().getApplicationContext()).getCTheme().getHeaderColor());
     }
 
     public void setIconColor(int color)

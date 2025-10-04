@@ -4,10 +4,12 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import com.hbtipcalc.tipcalculator.R;
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
 import android.widget.SeekBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Slider extends LinearLayout {
@@ -26,8 +28,14 @@ public class Slider extends LinearLayout {
         this.listener = l;
     }
 
-    public Slider(Context ctx) {
+    public Slider(Context ctx)
+    {
         super(ctx);
+
+        this.observers = new ArrayList<SliderObserver>();
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        CTheme t = app.getCTheme();
 
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -35,7 +43,7 @@ public class Slider extends LinearLayout {
         // minus button to decrement progress
         IconButton minusBtn = new IconButton(ctx, R.drawable.minus);
         minusBtn.setOnClickListener(v -> setProgress(seekBar.getProgress() - 1));
-        minusBtn.setIconColor(StyleConstants.COLOR_ACCENT);
+        minusBtn.setIconColor(t.getAccentColor());
         addView(minusBtn);
 
         // the actual slider
@@ -43,16 +51,16 @@ public class Slider extends LinearLayout {
         seekBar.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
         seekBar.setMax(100);
         seekBar.setProgress(50);
-        seekBar.setBackgroundColor(StyleConstants.COLOR_BACKGROUND_TWO);
-        seekBar.getProgressDrawable().setColorFilter(StyleConstants.COLOR_BACKGROUND_TWO, android.graphics.PorterDuff.Mode.MULTIPLY);
-        seekBar.getProgressDrawable().setColorFilter(StyleConstants.COLOR_ACCENT, android.graphics.PorterDuff.Mode.SRC_IN);
-        seekBar.getThumb().setColorFilter(StyleConstants.COLOR_ACCENT, android.graphics.PorterDuff.Mode.SRC_IN);
+        seekBar.setBackgroundColor(t.getBackgroundSecColor());
+        seekBar.getProgressDrawable().setColorFilter(t.getBackgroundSecColor(), android.graphics.PorterDuff.Mode.MULTIPLY);
+        seekBar.getProgressDrawable().setColorFilter(t.getAccentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
+        seekBar.getThumb().setColorFilter(t.getAccentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
         addView(seekBar);
 
         // plus button to increment progress
         IconButton plusBtn = new IconButton(ctx, R.drawable.plus);
         plusBtn.setOnClickListener(v -> setProgress(seekBar.getProgress() + 1));
-        plusBtn.setIconColor(StyleConstants.COLOR_ACCENT);
+        plusBtn.setIconColor(t.getAccentColor());
         addView(plusBtn);
 
         // the listener for dragging

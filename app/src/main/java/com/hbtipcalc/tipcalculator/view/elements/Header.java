@@ -10,15 +10,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.styles.StyleConstants;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
 public class Header extends LinearLayout {
-    private TextView titleView;
-    private LinearLayout buttonContainer;
+    private final TextView titleView;
+    private final LinearLayout buttonContainer;
+
+    public Header(Context ctx)
+    {
+        this(ctx, "");
+    }
 
     public Header(Context ctx, String title)
     {
         super(ctx);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        CTheme t = app.getCTheme();
 
         setOrientation(HORIZONTAL);
         setLayoutParams(new LayoutParams(
@@ -26,15 +35,15 @@ public class Header extends LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
         setPadding(20, 20, 20, 20);
-        setBackgroundColor(StyleConstants.COLOR_ACCENT);
+        setBackgroundColor(t.getAccentColor());
         setGravity(Gravity.CENTER_VERTICAL); // centered within the container
 
         // the title bar for the header itself
         titleView = new TextView(ctx);
         titleView.setText(title);
-        titleView.setTextSize(StyleConstants.FONT_TITLE);
-        titleView.setTextColor(StyleConstants.COLOR_HEADER);
-        titleView.setTypeface(StyleConstants.MONOSPACE);
+        titleView.setTextSize(t.getTileFontSize());
+        titleView.setTextColor(t.getHeaderColor());
+        titleView.setTypeface(t.getFont());
         LayoutParams titleParams = new LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f
         );
