@@ -1,43 +1,75 @@
 package com.hbtipcalc.tipcalculator.controllers;
 
 import com.hbtipcalc.tipcalculator.math.TipCalculator;
-import com.hbtipcalc.tipcalculator.math.TipResult;
+import com.hbtipcalc.tipcalculator.models.TipResult;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
 import com.hbtipcalc.tipcalculator.view.elements.SliderObserver;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the class that will receive updates from the view, perform calculations, then
+ * send them back to the UI. It also stores the relevant data for the calculator.
+ */
 public class Calculator implements SliderObserver
 {
+    private final List<CalculatorObserver> observers;
+
     private BigDecimal billAmt;
     private int tipPercent;
     private RoundingFlag roundingFlag;
-    private List<CalculatorObserver> observers;
 
+    /**
+     * Constructor.
+     *
+     * @param billAmt The BigDecimal of the bill that needs to be paid.
+     * @param tipPercent The int percent that wants to be paid
+     * @param roundingFlag UP, DOWN, NONE, DYNAMIC. Determines how rounding is handled. See RoundingFlag class for more info
+     */
     public Calculator(BigDecimal billAmt, int tipPercent, RoundingFlag roundingFlag)
     {
+        this.observers = new ArrayList<>();
         this.billAmt = billAmt;
         this.tipPercent = tipPercent;
         this.roundingFlag = roundingFlag;
     }
 
+    /**
+     * Uses the stored information to perform a calculation then sends it back out.
+     */
     public void calculate()
     {
         TipResult result = TipCalculator.calculate(billAmt, tipPercent, roundingFlag);
         notifyObservers(result);
     }
 
+    /**
+     * Adds an observer to be notified when a calculation is performed.
+     *
+     * @param observer The observer to add.
+     */
     public void addObserver(CalculatorObserver observer)
     {
         this.observers.add(observer);
     }
 
+    /**
+     * Removes an observer.
+     *
+     * @param observer The observer to remove
+     */
     public void removeObserver(CalculatorObserver observer)
     {
         this.observers.remove(observer);
     }
 
+    /**
+     * Notifies all observers of a new calculation.
+     *
+     * @param result
+     */
     public void notifyObservers(TipResult result)
     {
         for (CalculatorObserver observer : observers)
@@ -46,16 +78,16 @@ public class Calculator implements SliderObserver
         }
     }
 
+    /**
+     * When the connected slider is changed, we want to grab its new value as it becomes our
+     * new Tip Percent. Also calls calculate to send out the new calculation.
+     *
+     * @param newVal The new tip percent
+     */
     @Override
     public void handleSliderChange(int newVal)
     {
         this.tipPercent = newVal;
         calculate();
     }
-
-    // TODO: make a Textbox object which is just version of an EditText
-    // then make the relevant observer.
-
-    // will need to be a slider observer and a textbox observer. maybe i can generalize
-    // the observer interface i have?
 }

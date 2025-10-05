@@ -12,21 +12,10 @@ import android.widget.SeekBar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Slider extends LinearLayout {
+public class Slider extends LinearLayout
+{
     private List<SliderObserver> observers;
-
     private SeekBar seekBar;
-    private OnSliderChangeListener listener;
-
-    public interface OnSliderChangeListener
-    {
-        void onProgressChanged(int progress);
-    }
-
-    public void setOnSliderChangeListener(OnSliderChangeListener l)
-    {
-        this.listener = l;
-    }
 
     public Slider(Context ctx)
     {

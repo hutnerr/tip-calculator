@@ -51,6 +51,14 @@ public enum CTheme
             Color.parseColor("#1f2d20"),
             Color.parseColor("#3a4b3c"),
             Color.parseColor("#8f9779")
+    ),
+
+    ATOM_ONE_DARKER(
+        Color.parseColor("#abb2bf"),
+        Color.parseColor("#21252b"),
+        Color.parseColor("#21252b"),
+        Color.parseColor("#282c34"),
+        Color.parseColor("#61afef")
     );
 
 

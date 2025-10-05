@@ -1,6 +1,7 @@
 package com.hbtipcalc.tipcalculator.math;
 
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+import com.hbtipcalc.tipcalculator.models.TipResult;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,8 +9,8 @@ import java.math.RoundingMode;
 /**
  * Static class for the math behind the calculations.
  */
-public class TipCalculator {
-
+public class TipCalculator
+{
     private static final BigDecimal DIVISOR = new BigDecimal("100");
 
     /**
@@ -22,7 +23,7 @@ public class TipCalculator {
      *
      * @param inAmount The dollar amount
      * @param tip The tip percentage (e.g. 20 for 20%)
-     * @param roundingFlag to round after calculating the tip? RoundFlag.None, Up, Down
+     * @param roundingFlag to round after calculating the tip? NONE, UP, DOWN, or DYNAMIC
      * @return TipResult containing the tip amount and the total amount
      */
     public static TipResult calculate(BigDecimal inAmount, int tip, RoundingFlag roundingFlag)
@@ -69,7 +70,8 @@ public class TipCalculator {
                 total = total.setScale(0, RoundingMode.FLOOR);
                 break;
             case DYNAMIC:;
-                // TODO: FILL THIS OUT
+                // rounds to closest int
+                total = total.setScale(0, RoundingMode.HALF_UP);
                 break;
         }
         return total;

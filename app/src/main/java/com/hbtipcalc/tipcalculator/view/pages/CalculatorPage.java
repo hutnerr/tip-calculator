@@ -15,10 +15,12 @@ import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
+import com.hbtipcalc.tipcalculator.view.elements.ElementValueContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 import com.hbtipcalc.tipcalculator.view.elements.KeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
+import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
 
 public class CalculatorPage extends BasePage {
 
@@ -111,7 +113,7 @@ public class CalculatorPage extends BasePage {
         Slider slider = new Slider(ctx);
         slider.setBounds(50, true);
 
-        ElementContainer container = new ElementContainer(ctx, "Tip Percent", slider);
+        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Tip Percent", slider);
         layout.addView(container);
 
         slider.addObserver(container);

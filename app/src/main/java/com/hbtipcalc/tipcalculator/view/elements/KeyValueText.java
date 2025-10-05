@@ -1,12 +1,9 @@
 package com.hbtipcalc.tipcalculator.view.elements;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.controllers.CalculatorObserver;
-import com.hbtipcalc.tipcalculator.math.TipResult;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 

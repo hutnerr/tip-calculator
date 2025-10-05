@@ -1,0 +1,6 @@
+1. Make a Textbox component which is just my version of an EditText.
+2. Make the Textbox observer interface and have Calculator implement it
+3. Make the settings object and figure out how to store it
+4. Load the calculator object defaults.
+5. Go through and finish the rest of the JavaDocs and code cleanup
+    - I was on CalculatorApp going down
