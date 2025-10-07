@@ -3,6 +3,9 @@ package com.hbtipcalc.tipcalculator.models;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
+/**
+ * Enum to represent the available themes.
+ */
 public enum CTheme
 {
     GRUVBOX(
@@ -61,7 +64,6 @@ public enum CTheme
         Color.parseColor("#61afef")
     );
 
-
     // color vars
     private final int text;
     private final int header;
@@ -74,6 +76,15 @@ public enum CTheme
     private static final float TITLE_FS = 24f;
     private static final float TEXT_FS = 16f;
 
+    /**
+     * Constructor
+     *
+     * @param text The text color
+     * @param header The header color
+     * @param background The background color
+     * @param backgroundSec The background secondary color
+     * @param accent The accent color
+     */
     CTheme(int text, int header, int background, int backgroundSec, int accent)
     {
         this.text = text;
@@ -83,12 +94,14 @@ public enum CTheme
         this.accent = accent;
     }
 
+    // getter methods for colors
     public int getTextColor() { return this.text; }
     public int getHeaderColor() { return this.header; }
     public int getBackgroundColor() { return this.background; }
     public int getBackgroundSecColor() { return this.backgroundSec; }
     public int getAccentColor() { return this.accent; }
 
+    // getter methods for fonts
     public Typeface getFont() { return FONT; }
     public float getTileFontSize() { return TITLE_FS; }
     public float getTextFontSize() { return TEXT_FS; }

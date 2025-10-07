@@ -12,11 +12,19 @@ import android.widget.SeekBar;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom Slider. This is a progress bar.
+ */
 public class Slider extends LinearLayout
 {
     private List<SliderObserver> observers;
     private SeekBar seekBar;
 
+    /**
+     * Constructor.
+     *
+     * @param ctx
+     */
     public Slider(Context ctx)
     {
         super(ctx);
@@ -66,6 +74,11 @@ public class Slider extends LinearLayout
         });
     }
 
+    /**
+     * Sets the progress of the slider directly. Alerts the observers,
+     *
+     * @param value The value to set to
+     */
     public void setProgress(int value)
     {
         if (value < 0) value = 0;
@@ -74,22 +87,29 @@ public class Slider extends LinearLayout
         alertObservers(value);
     }
 
+    /**
+     * Getter for the progress.
+     * @return The current progress
+     */
     public int getProgress() {
         return seekBar.getProgress();
     }
 
+    /**
+     * Sets new bounds for the progress.
+     * @param max The new upper bound
+     * @param reset True if progress should go to center and reset
+     */
     public void setBounds(int max, boolean reset)
     {
         seekBar.setMax(max);
         if (reset) seekBar.setProgress(max / 2);
     }
 
-    public void setColor(int color)
-    {
-        seekBar.getProgressDrawable().setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
-        seekBar.getThumb().setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
-    }
-
+    /**
+     * Notifies all observers that a change has happened
+     * @param newValue
+     */
     public void alertObservers(int newValue)
     {
         for (SliderObserver obs : observers)
@@ -98,11 +118,21 @@ public class Slider extends LinearLayout
         }
     }
 
+    /**
+     * Removes an observer
+     *
+     * @param obs The observer to remove
+     */
     public void removeObserver(SliderObserver obs)
     {
         observers.remove(obs);
     }
 
+    /**
+     * Adds an observer
+     *
+     * @param obs The observer to add
+     */
     public void addObserver(SliderObserver obs)
     {
         if (obs != null && !observers.contains(obs))
@@ -110,6 +140,4 @@ public class Slider extends LinearLayout
             observers.add(obs);
         }
     }
-
-
 }

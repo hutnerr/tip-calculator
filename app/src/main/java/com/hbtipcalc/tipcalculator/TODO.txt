@@ -2,5 +2,23 @@
 2. Make the Textbox observer interface and have Calculator implement it
 3. Make the settings object and figure out how to store it
 4. Load the calculator object defaults.
-5. Go through and finish the rest of the JavaDocs and code cleanup
-    - I was on CalculatorApp going down
+5. Determine if i need the View content inside of ElementContainer
+6. I think I have alertObservers and notifyObservers in Slider and Calculator respectively.
+7. Implement the Split UI
+8. Make the Grid of Numbers and Calculator
+9. Add a cursor pointer for where I'm typing
+10. Use the strategy pattern for the UI of various ways of tip choices
+11. I'm going to need a dropdown element
+12. I'm also going to have to figure out an easy way to refresh the app on a change.
+
+
+// I think I want to make a general Observer interface that I can use more easily.
+// maybe with Generics
+
+// I also want to keep my more generic design.
+// So for the thing that implements the listen to slider interface, it should be a separate object
+// because not all of them are going to want to listen to a slider in that way for example
+// maybe SliderContainer or something
+
+// I also want to extend EditText to make my own TextBox so I can create my own custom observers for that
+// as well.

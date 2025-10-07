@@ -6,15 +6,34 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * ElementValueContainer but also provides an additional area besides the "Title" label
+ * to display more information.
+ */
 public class ElementValueContainer extends ElementContainer
 {
     private final TextView valueView;
 
+    /**
+     * Default constructor. Provides no text for the new value. Looks the same as its parent.
+     *
+     * @param ctx App Context
+     * @param labelText The label of the title
+     * @param content The content?
+     */
     public ElementValueContainer(Context ctx, String labelText, View content)
     {
         this(ctx, labelText, content, "");
     }
 
+    /**
+     * Constructor
+     *
+     * @param ctx App Context
+     * @param labelText The label of the title
+     * @param content The content?
+     * @param valueText The text for the new text area
+     */
     public ElementValueContainer(Context ctx, String labelText, View content, String valueText)
     {
         super(ctx, labelText, content);

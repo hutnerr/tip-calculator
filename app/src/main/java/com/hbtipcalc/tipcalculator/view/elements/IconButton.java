@@ -10,8 +10,16 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
+/**
+ * This is a simple button which takes in an SVG as its visuals.
+ */
 public class IconButton extends AppCompatImageButton
 {
+    /**
+     * Constructor.
+     *
+     * @param ctx The app context
+     */
     public IconButton(Context ctx)
     {
         super(ctx);
@@ -27,18 +35,34 @@ public class IconButton extends AppCompatImageButton
         setLayoutParams(new ViewGroup.LayoutParams(size, size));
     }
 
+    /**
+     * Constructor which takes in an icon directly.
+     *
+     * @param ctx The app context
+     * @param resID The resource ID of the icon
+     */
     public IconButton(Context ctx, int resID)
     {
         this(ctx);
         setIcon(resID);
     }
 
+    /**
+     * Sets the icon of the button
+     *
+     * @param resID
+     */
     public void setIcon(int resID)
     {
         setImageResource(resID);
         setIconColor(((CalculatorApp) getContext().getApplicationContext()).getCTheme().getHeaderColor());
     }
 
+    /**
+     * Sets the color of the icon.
+     *
+     * @param color
+     */
     public void setIconColor(int color)
     {
         if (getDrawable() != null) {

@@ -14,21 +14,35 @@ public class CalculatorApp extends Application
     private CTheme ctheme;
     private Calculator calculator;
 
+    /**
+     * Constructor.
+     */
     public CalculatorApp()
     {
+        // TODO: the theme and many of this other data needs to be loaded from settings.
         super.onCreate();
         this.ctheme = CTheme.ATOM_ONE_DARKER; // THEMES: Gruvbox, Solarized_Dark, Dracula, Nord, Monokai, Earth
         this.settings = loadSettings();
         this.calculator = createCalculator();
     }
 
-    public Settings loadSettings()
+    /**
+     * Helper which loads the user settings and populates the object.
+     *
+     * @return The User's Settings
+     */
+    private Settings loadSettings()
     {
         // TODO: Load the settings object and set instance var
         return null;
     }
 
-    public Calculator createCalculator()
+    /**
+     * Helper which creates the calculator controller based on the settings.
+     *
+     * @return The calculator
+     */
+    private Calculator createCalculator()
     {
         // TODO: the rounding flag and tip percent (default) set here should be set from settings
         return new Calculator(new BigDecimal("100.00"), 25, RoundingFlag.NONE);

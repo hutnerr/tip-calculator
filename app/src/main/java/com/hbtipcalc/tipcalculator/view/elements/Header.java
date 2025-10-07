@@ -13,15 +13,29 @@ import android.widget.TextView;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 
+/**
+ * This is the top navbar on any given page.
+ */
 public class Header extends LinearLayout {
     private final TextView titleView;
     private final LinearLayout buttonContainer;
 
+    /**
+     * Constructor. No title text.
+     *
+     * @param ctx The app context
+     */
     public Header(Context ctx)
     {
         this(ctx, "");
     }
 
+    /**
+     * Constructor.
+     *
+     * @param ctx The app context
+     * @param title The text to use for the title
+     */
     public Header(Context ctx, String title)
     {
         super(ctx);
@@ -58,13 +72,20 @@ public class Header extends LinearLayout {
         addView(buttonContainer);
     }
 
-    public void setTitle(String title)
-    {
-        titleView.setText(title);
-    }
-
+    /**
+     * Adds an icon button to the header. Typically a settings cog etc. The will be added
+     * to the right of the header text
+     *
+     * @param button The IconButton to add
+     */
     public void addIconButton(IconButton button)
     {
         buttonContainer.addView(button);
+    }
+
+    // Setters
+    public void setTitle(String title)
+    {
+        titleView.setText(title);
     }
 }

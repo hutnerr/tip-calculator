@@ -13,6 +13,9 @@ import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.Settings;
 
+/**
+ * This is a container for an element. It also provides a label to use as the "Title" of the container.
+ */
 public class ElementContainer extends LinearLayout
 {
     private final LinearLayout contentContainer;
@@ -20,6 +23,13 @@ public class ElementContainer extends LinearLayout
     private final TextView labelView;
     protected final CTheme t;
 
+    /**
+     * Constructor.
+     *
+     * @param ctx App Context
+     * @param labelText The text for the title
+     * @param content The view that it will be added to
+     */
     public ElementContainer(Context ctx, String labelText, View content)
     {
         super(ctx);
@@ -63,6 +73,7 @@ public class ElementContainer extends LinearLayout
         addView(contentContainer);
     }
 
+    // Getters & Setters
     public void setLabel(String text) { labelView.setText(text); }
     public View getContent() { return contentContainer.getChildAt(0);}
 }

@@ -8,5 +8,9 @@ package com.hbtipcalc.tipcalculator.models;
  */
 public enum RoundingFlag
 {
-    UP, DOWN, DYNAMIC, NONE
+    UP,         // always round tip up (6.03 -> 7.00)
+    DOWN,       // always round tip down (6.65 -> 6.00)
+    DYNAMIC,    // round based on closest (5.51 -> 6.00 and 5.50 -> 5.00)
+    NONE        // no rounding performed
 }
+

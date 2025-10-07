@@ -22,6 +22,9 @@ import com.hbtipcalc.tipcalculator.view.elements.KeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
 import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
 
+/**
+ * This is the main page that the app will rest on.
+ */
 public class CalculatorPage extends BasePage {
 
     private LinearLayout layout;
@@ -34,6 +37,11 @@ public class CalculatorPage extends BasePage {
     private CTheme t;
     private Calculator calculator;
 
+    /**
+     * Constructor.
+     *
+     * @param ctx
+     */
     public CalculatorPage(Context ctx)
     {
         super(ctx);

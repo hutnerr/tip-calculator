@@ -9,6 +9,9 @@ import com.hbtipcalc.tipcalculator.R;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 
+/**
+ * A place for users to change their settings.
+ */
 public class Settings extends BasePage {
 
     private LinearLayout layout;
@@ -19,6 +22,11 @@ public class Settings extends BasePage {
     private IconButton resetBtn;
     private IconButton helpBtn;
 
+    /**
+     * Constructor.
+     *
+     * @param ctx
+     */
     public Settings(Context ctx)
     {
         super(ctx);
@@ -39,6 +47,7 @@ public class Settings extends BasePage {
         return layout;
     }
 
+    // BELOW ARE HELPER METHODS TO GENERATE UI CHUNKS
     private void generateExitBtn()
     {
         if (header == null) return;
