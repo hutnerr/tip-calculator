@@ -5,9 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
-import com.hbtipcalc.tipcalculator.models.Settings;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
 import com.hbtipcalc.tipcalculator.view.pages.CalculatorPage;
 

@@ -8,16 +8,19 @@ import android.view.View;
  */
 public class SliderElementValueContainer extends ElementValueContainer implements SliderObserver
 {
+    private String postfix;
+
     /**
      * Constructor
      *
      * @param ctx The context of the app
      * @param labelText The "title" label text
+     * @param postfix The text to appear after the slider value
      * @param content The content
      */
-    public SliderElementValueContainer(Context ctx, String labelText, View content)
+    public SliderElementValueContainer(Context ctx, String labelText, View content, String postfix)
     {
-        this(ctx, labelText, content, "");
+        this(ctx, labelText, content, postfix,"");
     }
 
     /**
@@ -26,17 +29,18 @@ public class SliderElementValueContainer extends ElementValueContainer implement
      * @param ctx The context of the app
      * @param labelText The "title" label text
      * @param content The content
+     * @param postfix The text to appear after the slider value
      * @param valueText The "value" label text
      */
-    public SliderElementValueContainer(Context ctx, String labelText, View content, String valueText)
+    public SliderElementValueContainer(Context ctx, String labelText, View content, String postfix, String valueText)
     {
         super(ctx, labelText, content, valueText);
+        this.postfix = postfix;
     }
 
     @Override
     public void handleSliderChange(int newProgress)
     {
-        // FIXME: currently hardcoded to work with percents. maybe store a postfix/postfix as state?
-        setValue(newProgress + "%");
+        setValue(newProgress + postfix);
     }
 }

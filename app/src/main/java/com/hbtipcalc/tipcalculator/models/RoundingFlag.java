@@ -8,9 +8,26 @@ package com.hbtipcalc.tipcalculator.models;
  */
 public enum RoundingFlag
 {
-    UP,         // always round tip up (6.03 -> 7.00)
-    DOWN,       // always round tip down (6.65 -> 6.00)
-    DYNAMIC,    // round based on closest (5.51 -> 6.00 and 5.50 -> 5.00)
-    NONE        // no rounding performed
-}
+    UP(0),         // always round tip up (6.03 -> 7.00)
+    DOWN(1),       // always round tip down (6.65 -> 6.00)
+    DYNAMIC(2),    // round based on closest (5.51 -> 6.00 and 5.50 -> 5.00)
+    NONE(3);       // no rounding performed
 
+    private final int value;
+
+    RoundingFlag(int value)
+    {
+        this.value = value;
+    }
+
+    public static RoundingFlag fromInt(int value)
+    {
+        for (RoundingFlag flag : values())
+        {
+            if (flag.value == value) return flag;
+        }
+        return NONE; // default if invalid value
+    }
+
+    public int getValue() { return value; }
+}

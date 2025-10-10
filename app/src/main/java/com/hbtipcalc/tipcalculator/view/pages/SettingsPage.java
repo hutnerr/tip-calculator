@@ -12,7 +12,7 @@ import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 /**
  * A place for users to change their settings.
  */
-public class Settings extends BasePage {
+public class SettingsPage extends BasePage {
 
     private LinearLayout layout;
 
@@ -27,7 +27,7 @@ public class Settings extends BasePage {
      *
      * @param ctx
      */
-    public Settings(Context ctx)
+    public SettingsPage(Context ctx)
     {
         super(ctx);
 

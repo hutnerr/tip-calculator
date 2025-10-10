@@ -73,8 +73,9 @@ public enum CTheme
 
     // font styling
     private static final Typeface FONT = Typeface.MONOSPACE;
+    private static final float NUM_PAD_BTN_FS = 26f;
     private static final float TITLE_FS = 24f;
-    private static final float TEXT_FS = 16f;
+    private static final float TEXT_FS = 18f;
 
     /**
      * Constructor
@@ -105,4 +106,5 @@ public enum CTheme
     public Typeface getFont() { return FONT; }
     public float getTileFontSize() { return TITLE_FS; }
     public float getTextFontSize() { return TEXT_FS; }
+    public float getNumPadBtnFontSize() { return NUM_PAD_BTN_FS; }
 }

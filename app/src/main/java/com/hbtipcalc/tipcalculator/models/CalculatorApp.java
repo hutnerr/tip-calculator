@@ -2,6 +2,8 @@ package com.hbtipcalc.tipcalculator.models;
 import android.app.Application;
 
 import com.hbtipcalc.tipcalculator.controllers.Calculator;
+import com.hbtipcalc.tipcalculator.settings.Settings;
+import com.hbtipcalc.tipcalculator.settings.SettingsDataStore;
 
 import java.math.BigDecimal;
 
@@ -14,27 +16,21 @@ public class CalculatorApp extends Application
     private CTheme ctheme;
     private Calculator calculator;
 
-    /**
-     * Constructor.
-     */
-    public CalculatorApp()
+    @Override
+    public void onCreate()
     {
-        // TODO: the theme and many of this other data needs to be loaded from settings.
         super.onCreate();
-        this.ctheme = CTheme.ATOM_ONE_DARKER; // THEMES: Gruvbox, Solarized_Dark, Dracula, Nord, Monokai, Earth
-        this.settings = loadSettings();
-        this.calculator = createCalculator();
-    }
 
-    /**
-     * Helper which loads the user settings and populates the object.
-     *
-     * @return The User's Settings
-     */
-    private Settings loadSettings()
-    {
-        // TODO: Load the settings object and set instance var
-        return null;
+        // Initialize settings
+        SettingsDataStore.init(this);
+        Settings.getInstance().loadSettings();
+        this.settings = Settings.getInstance();
+
+        // TODO: the theme needs to be loaded from settings.
+        this.ctheme = CTheme.GRUVBOX; // THEMES: Gruvbox, Solarized_Dark, Dracula, Nord, Monokai, Earth
+
+        // Create calculator with loaded settings
+        this.calculator = createCalculator();
     }
 
     /**
@@ -44,13 +40,12 @@ public class CalculatorApp extends Application
      */
     private Calculator createCalculator()
     {
-        // TODO: the rounding flag and tip percent (default) set here should be set from settings
-        return new Calculator(new BigDecimal("100.00"), 25, RoundingFlag.NONE);
+        return new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
     }
 
     // Getter methods
-    public Settings getSettings() { return this.settings; };
-    public CTheme getCTheme() { return this.ctheme; };
+    public Settings getSettings() { return this.settings; }
+    public CTheme getCTheme() { return this.ctheme; }
     public Calculator getCalculator() { return this.calculator; }
 
     // Setter methods

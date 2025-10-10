@@ -3,33 +3,25 @@ package com.hbtipcalc.tipcalculator.view.elements;
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import com.hbtipcalc.tipcalculator.R;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
-
-import android.widget.SeekBar;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Custom Slider. This is a progress bar.
- */
 public class Slider extends LinearLayout
 {
-    private List<SliderObserver> observers;
-    private SeekBar seekBar;
+    private final List<SliderObserver> observers;
+    private final SeekBar seekBar;
+    private int min = 0;
+    private int max = 100;
 
-    /**
-     * Constructor.
-     *
-     * @param ctx
-     */
     public Slider(Context ctx)
     {
         super(ctx);
 
-        this.observers = new ArrayList<SliderObserver>();
+        this.observers = new ArrayList<>();
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         CTheme t = app.getCTheme();
@@ -37,107 +29,90 @@ public class Slider extends LinearLayout
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        // minus button to decrement progress
+        // minus button
         IconButton minusBtn = new IconButton(ctx, R.drawable.minus);
-        minusBtn.setOnClickListener(v -> setProgress(seekBar.getProgress() - 1));
+        minusBtn.setOnClickListener(v -> setProgress(getProgress() - 1));
         minusBtn.setIconColor(t.getAccentColor());
         addView(minusBtn);
 
-        // the actual slider
+        // seekbar
         seekBar = new SeekBar(ctx);
         seekBar.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
-        seekBar.setMax(100);
-        seekBar.setProgress(50);
+        seekBar.setMax(max - min);
+        seekBar.setProgress(0);
         seekBar.setBackgroundColor(t.getBackgroundSecColor());
-        seekBar.getProgressDrawable().setColorFilter(t.getBackgroundSecColor(), android.graphics.PorterDuff.Mode.MULTIPLY);
         seekBar.getProgressDrawable().setColorFilter(t.getAccentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
         seekBar.getThumb().setColorFilter(t.getAccentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
         addView(seekBar);
 
-        // plus button to increment progress
+        // plus button
         IconButton plusBtn = new IconButton(ctx, R.drawable.plus);
-        plusBtn.setOnClickListener(v -> setProgress(seekBar.getProgress() + 1));
+        plusBtn.setOnClickListener(v -> setProgress(getProgress() + 1));
         plusBtn.setIconColor(t.getAccentColor());
         addView(plusBtn);
 
-        // the listener for dragging
+        // listener
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
-            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) { alertObservers(progress); }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar sb) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar sb) {}
+            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser)
+            {
+                notifyObservers(progress + min);
+            }
+            @Override public void onStartTrackingTouch(SeekBar sb) {}
+            @Override public void onStopTrackingTouch(SeekBar sb) {}
         });
     }
 
-    /**
-     * Sets the progress of the slider directly. Alerts the observers,
-     *
-     * @param value The value to set to
-     */
     public void setProgress(int value)
     {
-        if (value < 0) value = 0;
-        if (value > seekBar.getMax()) value = seekBar.getMax();
-        seekBar.setProgress(value);
-        alertObservers(value);
+        int clamped = Math.max(min, Math.min(value, max));
+        seekBar.setProgress(clamped - min);
+        notifyObservers(clamped);
     }
 
-    /**
-     * Getter for the progress.
-     * @return The current progress
-     */
-    public int getProgress() {
-        return seekBar.getProgress();
-    }
-
-    /**
-     * Sets new bounds for the progress.
-     * @param max The new upper bound
-     * @param reset True if progress should go to center and reset
-     */
-    public void setBounds(int max, boolean reset)
+    public int getProgress()
     {
-        seekBar.setMax(max);
-        if (reset) seekBar.setProgress(max / 2);
+        return seekBar.getProgress() + min;
     }
 
-    /**
-     * Notifies all observers that a change has happened
-     * @param newValue
-     */
-    public void alertObservers(int newValue)
+    public void setBounds(int min, int max, boolean reset)
     {
-        for (SliderObserver obs : observers)
+        setMinium(min);
+        setMax(max, reset);
+    }
+
+    public void setMinium(int min)
+    {
+        this.min = min;
+        seekBar.setMax(max - min);
+        int p = getProgress();
+        if (p < min) setProgress(min);
+        if (p > max) setProgress(max);
+    }
+
+    public void setMax(int max, boolean reset)
+    {
+        this.max = max;
+        seekBar.setMax(max - min);
+        if (reset) setProgress((min + max) / 2);
+    }
+
+    public void notifyObservers(int value)
+    {
+        for (SliderObserver observer : observers)
         {
-            obs.handleSliderChange(newValue);
+            observer.handleSliderChange(value);
         }
     }
 
-    /**
-     * Removes an observer
-     *
-     * @param obs The observer to remove
-     */
+    public void addObserver(SliderObserver obs)
+    {
+        if (obs != null && !observers.contains(obs)) observers.add(obs);
+    }
+
     public void removeObserver(SliderObserver obs)
     {
         observers.remove(obs);
-    }
-
-    /**
-     * Adds an observer
-     *
-     * @param obs The observer to add
-     */
-    public void addObserver(SliderObserver obs)
-    {
-        if (obs != null && !observers.contains(obs))
-        {
-            observers.add(obs);
-        }
     }
 }

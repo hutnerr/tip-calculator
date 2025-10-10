@@ -4,6 +4,7 @@ import com.hbtipcalc.tipcalculator.math.TipCalculator;
 import com.hbtipcalc.tipcalculator.models.TipResult;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
 import com.hbtipcalc.tipcalculator.view.elements.SliderObserver;
+import com.hbtipcalc.tipcalculator.view.elements.TextBoxObserver;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
  * This is the class that will receive updates from the view, perform calculations, then
  * send them back to the UI. It also stores the relevant data for the calculator.
  */
-public class Calculator implements SliderObserver
+public class Calculator implements SliderObserver, TextBoxObserver
 {
     private final List<CalculatorObserver> observers;
 
@@ -88,6 +89,13 @@ public class Calculator implements SliderObserver
     public void handleSliderChange(int newVal)
     {
         this.tipPercent = newVal;
+        calculate();
+    }
+
+    @Override
+    public void handleText(String newText)
+    {
+        this.billAmt = new BigDecimal(newText);
         calculate();
     }
 }

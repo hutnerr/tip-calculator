@@ -3,9 +3,11 @@ package com.hbtipcalc.tipcalculator.view.pages;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,25 +16,34 @@ import com.hbtipcalc.tipcalculator.R;
 import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.settings.Settings;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
 import com.hbtipcalc.tipcalculator.view.elements.ElementValueContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 import com.hbtipcalc.tipcalculator.view.elements.KeyValueText;
+import com.hbtipcalc.tipcalculator.view.elements.NumPad;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
 import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
+import com.hbtipcalc.tipcalculator.view.elements.SplitKeyValueText;
+import com.hbtipcalc.tipcalculator.view.elements.TextBox;
+import com.hbtipcalc.tipcalculator.view.elements.TipKeyValueText;
+import com.hbtipcalc.tipcalculator.view.elements.TotalKeyValueText;
 
 /**
  * This is the main page that the app will rest on.
  */
-public class CalculatorPage extends BasePage {
-
+public class CalculatorPage extends BasePage
+{
+    private FrameLayout root;
     private LinearLayout layout;
     private Header header;
     private IconButton splitBtn;
     private IconButton settingsBtn;
-    private TextView tipResults;
-    private TextView totalResults;
+    private TextBox billAmount;
+
+    private SliderElementValueContainer splitSliderContainer;
+    private SplitKeyValueText splitKeyValueText;
 
     private CTheme t;
     private Calculator calculator;
@@ -50,10 +61,14 @@ public class CalculatorPage extends BasePage {
         this.t = app.getCTheme();
         this.calculator = app.getCalculator();
 
+        root = new FrameLayout(ctx);
+
         layout = new LinearLayout(ctx);
         layout.setOrientation(LinearLayout.VERTICAL);
-
-        // maybe i can wrap all this stuff here in a build() func or something to make it easier
+        layout.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
 
         this.header = new Header(ctx, "Tip Calculator");
         generateSplitBtn();
@@ -62,14 +77,30 @@ public class CalculatorPage extends BasePage {
 
         generateBillAmountField();
         generateTipPercentField();
-
+        generateShareField();
         generateResultsField();
+
+        root.addView(layout);
+
+        NumPad numPad = new NumPad(ctx);
+        FrameLayout.LayoutParams numPadParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        numPadParams.gravity = Gravity.BOTTOM;
+        numPad.setLayoutParams(numPadParams);
+
+        numPad.addObserver(billAmount);
+
+        root.addView(numPad);
+
+        toggleSplit(); // SPLIT OFF BY DEFAULT FOR NOW
     }
 
     @Override
     public View getView()
     {
-        return layout;
+        return root;
     }
 
     /**
@@ -79,6 +110,18 @@ public class CalculatorPage extends BasePage {
      */
     public void toggleSplit()
     {
+        if (splitSliderContainer == null || splitKeyValueText == null) return;
+
+        if (splitSliderContainer.getVisibility() == View.VISIBLE)
+        {
+            splitSliderContainer.setVisibility(View.GONE);
+            splitKeyValueText.setVisibility(View.GONE);
+        }
+        else
+        {
+            splitSliderContainer.setVisibility(View.VISIBLE);
+            splitKeyValueText.setVisibility(View.VISIBLE);
+        }
     }
 
     // GENERATOR METHODS BELOW
@@ -96,37 +139,48 @@ public class CalculatorPage extends BasePage {
         this.settingsBtn = new IconButton(ctx, R.drawable.settings);
         this.settingsBtn.setOnClickListener(v -> {
             if (ctx instanceof MainActivity) {
-                ((MainActivity) ctx).setPage(new Settings((MainActivity) ctx));
+                ((MainActivity) ctx).setPage(new SettingsPage((MainActivity) ctx));
             }
         });
         header.addIconButton(settingsBtn);
     }
 
-    // TODO: i want this to have a clear button on the right
-    // maybe make this a EditTextButton object that I create or something?
     private void generateBillAmountField()
     {
-        EditText input = new EditText(ctx);
-        input.setBackground(null); // remove the default bg
-        input.setTextColor(t.getTextColor());
-        // for now allow these inputs instead of static numbers
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        ElementContainer container = new ElementContainer(ctx, "Bill Amount", input);
+        this.billAmount = new TextBox(ctx);
+        billAmount.addObserver(calculator);
+        ElementContainer container = new ElementContainer(ctx, "Bill Amount", billAmount);
         layout.addView(container);
+    }
+
+    private void generateShareField()
+    {
+        Slider slider = new Slider(ctx);
+        slider.setBounds(2, 10, false);
+
+        slider.setProgress(0); // 0, but would actually be 2 cause our minimum
+
+        this.splitSliderContainer = new SliderElementValueContainer(ctx, "Split", slider, " people");
+        layout.addView(splitSliderContainer);
+
+        slider.addObserver(splitSliderContainer);
+        splitSliderContainer.setValue(slider.getProgress() + " people");
     }
 
     // TODO: eventually have this match based on the user settings.
     private void generateTipPercentField()
     {
         Slider slider = new Slider(ctx);
-        slider.setBounds(50, true);
+        slider.setBounds(0, 50, true);
 
-        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Tip Percent", slider);
+        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Tip Percent", slider, "%");
         layout.addView(container);
 
         slider.addObserver(container);
         slider.addObserver(this.calculator);
-        container.setValue(slider.getProgress() + "%"); // set initially
+        int defaultTipPc = Settings.getInstance().getTipPercentage();
+        slider.setProgress(defaultTipPc);
+        container.setValue(defaultTipPc + "%"); // set initially
     }
 
     private void generateResultsField()
@@ -135,22 +189,18 @@ public class CalculatorPage extends BasePage {
         LinearLayout resultsContainer = new LinearLayout(ctx);
         resultsContainer.setOrientation(LinearLayout.VERTICAL);
 
-        resultsContainer.addView(new KeyValueText(ctx, "Tip Amount", "0.54", true));
-        resultsContainer.addView(new KeyValueText(ctx, "Total Amount", "5.42", true));
-        // TODO: I should create 2 subclasses of this. One of the tip amount, one for the total amount
-        // and they implement the CalculatorObserver differently.
+        TipKeyValueText tipText = new TipKeyValueText(ctx);
+        TotalKeyValueText totalText = new TotalKeyValueText(ctx);
+
+        this.splitKeyValueText = new SplitKeyValueText(ctx);
+
+        resultsContainer.addView(tipText);
+        resultsContainer.addView(totalText);
+        resultsContainer.addView(splitKeyValueText);
+
+        calculator.addObserver(tipText);
+        calculator.addObserver(totalText);
 
         layout.addView(resultsContainer);
     }
 }
-
-// I think I want to make a general Observer interface that I can use more easily.
-// maybe with Generics
-
-// I also want to keep my more generic design.
-// So for the thing that implements the listen to slider interface, it should be a separate object
-// because not all of them are going to want to listen to a slider in that way for example
-// maybe SliderContainer or something
-
-// I also want to extend EditText to make my own TextBox so I can create my own custom observers for that
-// as well.

@@ -2,16 +2,13 @@ package com.hbtipcalc.tipcalculator.view.elements;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
-import com.hbtipcalc.tipcalculator.models.Settings;
 
 /**
  * This is a container for an element. It also provides a label to use as the "Title" of the container.
@@ -39,7 +36,7 @@ public class ElementContainer extends LinearLayout
 
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        setPadding(60, 40, 60, 20);
+        setPadding(60, 20, 60, 10);
 
         // layout for the top labels
         this.labelContainer = new LinearLayout(ctx);
