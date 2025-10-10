@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.rxjava3.RxDataStore;
 
+import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
 
 import java.util.concurrent.ExecutorService;
@@ -16,10 +17,12 @@ public class Settings
     private static final int DEFAULT_TIP_PERCENT = 15;
     private static final RoundingFlag DEFAULT_ROUND_FLAG = RoundingFlag.NONE;
     private static final String DEFAULT_CURRENCY = "$";
+    private static final CTheme DEFAULT_THEME = CTheme.GRUVBOX;
 
     private int tipPercentage;
     private RoundingFlag roundFlag;
     private String currency;
+    private CTheme theme;
 
     private static Settings instance; // singleton
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -50,6 +53,10 @@ public class Settings
 
                 String curr = prefs.get(SettingsKeys.CURRENCY);
                 this.currency = curr != null ? curr : DEFAULT_CURRENCY;
+
+                Integer themeId = prefs.get(SettingsKeys.THEME);
+                this.theme = themeId != null ? CTheme.values()[themeId] : DEFAULT_THEME;
+
             }).get(); // wait for completion
         }
         catch (Exception e)
@@ -64,6 +71,7 @@ public class Settings
     public int getTipPercentage() { return tipPercentage; }
     public RoundingFlag getRoundFlag() { return roundFlag; }
     public String getCurrency() { return currency; }
+    public CTheme getTheme() { return theme; }
 
     public void setTipPercentage(int percentage)
     {
@@ -81,6 +89,20 @@ public class Settings
     {
         this.currency = currency;
         saveValue(SettingsKeys.CURRENCY, currency);
+    }
+
+    public void setTheme(CTheme theme)
+    {
+        this.theme = theme;
+        saveValue(SettingsKeys.THEME, theme.getID());
+    }
+
+    public void reset()
+    {
+        setTipPercentage(DEFAULT_TIP_PERCENT);
+        setRoundFlag(DEFAULT_ROUND_FLAG);
+        setCurrency(DEFAULT_CURRENCY);
+        setTheme(DEFAULT_THEME);
     }
 
     private <T> void saveValue(Preferences.Key<T> key, T value)

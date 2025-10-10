@@ -37,12 +37,19 @@ public class Calculator implements SliderObserver, TextBoxObserver
         this.roundingFlag = roundingFlag;
     }
 
+    public void setRoundingFlag(RoundingFlag flag)
+    {
+        this.roundingFlag = flag;
+    }
+
     /**
      * Uses the stored information to perform a calculation then sends it back out.
      */
     public void calculate()
     {
+        System.out.println("DEBUG: billAmt=" + billAmt + ", tipPercent=" + tipPercent + ", roundingFlag=" + roundingFlag);
         TipResult result = TipCalculator.calculate(billAmt, tipPercent, roundingFlag);
+        System.out.println("DEBUG: result tip=" + result.getTip() + ", total=" + result.getTotal());
         notifyObservers(result);
     }
 

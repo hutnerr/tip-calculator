@@ -39,8 +39,21 @@ public class TipCalculator
         }
 
         BigDecimal tipAmount = calculateTip(inAmount, tip);
-        BigDecimal total = calculateTotal(inAmount, tipAmount, roundingFlag);
-        return new TipResult(tipAmount, total);
+        BigDecimal total = inAmount.add(tipAmount);
+
+        // Apply rounding to total
+        BigDecimal roundedTotal = applyRounding(total, roundingFlag);
+
+        // IMPORTANT: Ensure rounded total is never less than the original bill
+        if (roundedTotal.compareTo(inAmount) < 0)
+        {
+            roundedTotal = inAmount; // Can't pay less than the bill!
+        }
+
+        // Recalculate tip based on rounded total
+        BigDecimal adjustedTip = roundedTotal.subtract(inAmount);
+
+        return new TipResult(adjustedTip, roundedTotal);
     }
 
     public static TipResult calculate(String inAmount, int tip, RoundingFlag roundingFlag)
@@ -55,25 +68,21 @@ public class TipCalculator
         return tipAmount;
     }
 
-    private static BigDecimal calculateTotal(BigDecimal inAmount, BigDecimal tipAmount, RoundingFlag roundingFlag)
+    private static BigDecimal applyRounding(BigDecimal total, RoundingFlag roundingFlag)
     {
-        BigDecimal total = inAmount.add(tipAmount);
-
         switch (roundingFlag)
         {
             case NONE:
-                break;
+                return total;
             case UP:
-                total = total.setScale(0, RoundingMode.CEILING);
-                break;
+                return total.setScale(0, RoundingMode.CEILING);
             case DOWN:
-                total = total.setScale(0, RoundingMode.FLOOR);
-                break;
-            case DYNAMIC:;
+                return total.setScale(0, RoundingMode.FLOOR);
+            case DYNAMIC:
                 // rounds to closest int
-                total = total.setScale(0, RoundingMode.HALF_UP);
-                break;
+                return total.setScale(0, RoundingMode.HALF_UP);
+            default:
+                return total;
         }
-        return total;
     }
 }

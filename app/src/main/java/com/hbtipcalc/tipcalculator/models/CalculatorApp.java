@@ -21,26 +21,11 @@ public class CalculatorApp extends Application
     {
         super.onCreate();
 
-        // Initialize settings
         SettingsDataStore.init(this);
         Settings.getInstance().loadSettings();
         this.settings = Settings.getInstance();
-
-        // TODO: the theme needs to be loaded from settings.
-        this.ctheme = CTheme.GRUVBOX; // THEMES: Gruvbox, Solarized_Dark, Dracula, Nord, Monokai, Earth
-
-        // Create calculator with loaded settings
-        this.calculator = createCalculator();
-    }
-
-    /**
-     * Helper which creates the calculator controller based on the settings.
-     *
-     * @return The calculator
-     */
-    private Calculator createCalculator()
-    {
-        return new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
+        this.ctheme = settings.getTheme();
+        this.calculator = new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
     }
 
     // Getter methods
@@ -48,6 +33,8 @@ public class CalculatorApp extends Application
     public CTheme getCTheme() { return this.ctheme; }
     public Calculator getCalculator() { return this.calculator; }
 
-    // Setter methods
-    public void setCTheme(CTheme theme) { this.ctheme = theme; }
+    public void setCTheme(CTheme t)
+    {
+        this.ctheme = t;
+    }
 }

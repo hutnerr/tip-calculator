@@ -6,8 +6,16 @@ import android.widget.LinearLayout;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.R;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+import com.hbtipcalc.tipcalculator.settings.Settings;
+import com.hbtipcalc.tipcalculator.view.elements.DropDown;
+import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
+import com.hbtipcalc.tipcalculator.view.elements.Slider;
+import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
 
 /**
  * A place for users to change their settings.
@@ -39,6 +47,11 @@ public class SettingsPage extends BasePage {
         generateResetBtn();
         generateExitBtn();
         layout.addView(header);
+
+        generateDefaultTipOption();
+        generateRoundingOption();
+        generateCurrencyOption();
+        generateThemeOption();
     }
 
     @Override
@@ -72,5 +85,116 @@ public class SettingsPage extends BasePage {
         if (header == null) return;
         this.resetBtn = new IconButton(ctx, R.drawable.reset);
         header.addIconButton(resetBtn);
+        // TODO: provide a popup thats like: "Do you want to reset your settings?" YES NO
+    }
+
+    private void generateDefaultTipOption()
+    {
+        Slider slider = new Slider(ctx);
+        slider.setBounds(0, 50, true);
+
+        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Default Tip Percent", slider, "%");
+        layout.addView(container);
+
+        int defaultTipPc = Settings.getInstance().getTipPercentage();
+        slider.setProgress(defaultTipPc);
+        slider.addObserver(container);
+        slider.addObserver(value -> Settings.getInstance().setTipPercentage(value));
+
+        container.setValue(defaultTipPc + "%");
+    }
+
+    private void generateRoundingOption()
+    {
+        DropDown dropDown = new DropDown(ctx);
+
+        String[] options = {"Always Up", "Always Down", "Dynamic", "None"};
+        dropDown.setItems(options);
+
+        RoundingFlag currentFlag = Settings.getInstance().getRoundFlag();
+        dropDown.setSelection(currentFlag.ordinal()); // ordinal() gives enum position
+
+        dropDown.addObserver((position, value) -> {
+            RoundingFlag flag = RoundingFlag.values()[position];
+            Settings.getInstance().setRoundFlag(flag);
+
+            CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+            app.getCalculator().setRoundingFlag(flag);
+        });
+
+        ElementContainer container = new ElementContainer(ctx, "Rounding Behavior", dropDown);
+        layout.addView(container);
+    }
+
+    private void generateCurrencyOption()
+    {
+        DropDown dropDown = new DropDown(ctx);
+
+        String[] currencies = {
+                "$",
+                "€",
+                "£",
+                "₹",
+                "₣",
+                "R",
+                "kr"
+        };
+
+        dropDown.setItems(currencies);
+
+        String currentCurrency = Settings.getInstance().getCurrency();
+        for (int i = 0; i < currencies.length; i++)
+        {
+            if (currencies[i].startsWith(currentCurrency))
+            {
+                dropDown.setSelection(i);
+                break;
+            }
+        }
+
+        dropDown.addObserver((position, value) -> {
+            Settings.getInstance().setCurrency(value);
+        });
+
+        ElementContainer container = new ElementContainer(ctx, "Currency Symbol", dropDown);
+        layout.addView(container);
+    }
+
+    private void generateThemeOption()
+    {
+        DropDown dropDown = new DropDown(ctx);
+
+        String[] themes = {
+                "Gruvbox",
+                "Dracula",
+                "Mocha",
+                "Frostbite",
+                "Sunset",
+                "Earth",
+                "Neon Slate"
+        };
+
+        dropDown.setItems(themes);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        CTheme currentTheme = app.getCTheme();
+        dropDown.setSelection(currentTheme.getID());
+
+        dropDown.addObserver((position, value) -> {
+            CTheme newTheme = CTheme.values()[position];
+
+            // Save the new theme to settings
+            Settings.getInstance().setTheme(newTheme);
+            app.setCTheme(newTheme);
+
+            // Restart the activity to apply the theme
+            if (ctx instanceof android.app.Activity) {
+                android.app.Activity activity = (android.app.Activity) ctx;
+                activity.recreate(); // This restarts the activity
+            }
+        });
+
+        ElementContainer container = new ElementContainer(ctx, "Theme", dropDown);
+        layout.addView(container);
     }
 }

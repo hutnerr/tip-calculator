@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
 import com.hbtipcalc.tipcalculator.view.pages.CalculatorPage;
+import com.hbtipcalc.tipcalculator.view.pages.SettingsPage;
 
 /**
  * This is the entry point of the app.
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         // CTheme theme = app.getCTheme();
 
         setContentView(rootLayout);
-        setPage(new CalculatorPage(this)); // out home page is the calculator
+//        setPage(new CalculatorPage(this)); // out home page is the calculator
+        setPage(new SettingsPage(this));
     }
 
     /**
