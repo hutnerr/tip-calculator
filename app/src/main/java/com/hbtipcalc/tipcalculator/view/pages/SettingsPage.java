@@ -1,5 +1,6 @@
 package com.hbtipcalc.tipcalculator.view.pages;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,8 +21,8 @@ import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
 /**
  * A place for users to change their settings.
  */
-public class SettingsPage extends BasePage {
-
+public class SettingsPage extends BasePage
+{
     private LinearLayout layout;
 
     private Header header;
@@ -43,7 +44,7 @@ public class SettingsPage extends BasePage {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         this.header = new Header(ctx, "Settings");
-        generateHelpBtn();
+//        generateHelpBtn();
         generateResetBtn();
         generateExitBtn();
         layout.addView(header);
@@ -83,10 +84,29 @@ public class SettingsPage extends BasePage {
     private void generateResetBtn()
     {
         if (header == null) return;
+
         this.resetBtn = new IconButton(ctx, R.drawable.reset);
         header.addIconButton(resetBtn);
-        // TODO: provide a popup thats like: "Do you want to reset your settings?" YES NO
+
+        resetBtn.setOnClickListener(v -> {
+            new AlertDialog.Builder(ctx)
+                    .setTitle("Reset Settings")
+                    .setMessage("Are you sure you want to revert back to default settings?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        Settings.getInstance().reset();
+                        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+                        app.setCTheme(Settings.getInstance().getTheme());
+                        if (ctx instanceof android.app.Activity) {
+                            android.app.Activity activity = (android.app.Activity) ctx;
+                            activity.recreate();
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(true)
+                    .show();
+        });
     }
+
 
     private void generateDefaultTipOption()
     {
