@@ -26,6 +26,7 @@ Built entirely in Java in Android Studio, it features a fully programmatic UI wi
 - [ ] Additional Tip Selection Methods
   - Preset and customizable buttons
   - Typed in directly
+  - Carousel
 - [ ] Additional Options
   - Remember last tip percentage
   - Show bill splitting on launch
