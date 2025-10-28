@@ -22,3 +22,13 @@
 
 // I also want to extend EditText to make my own TextBox so I can create my own custom observers for that
 // as well.
+
+NEW
+- I want animations for changing pages
+- My dropdown should have a border or something around it to make it easier to see
+- The Currency Symbol should be implemented instea of statically set
+- Implement splitting functionality
+- Sizing should be changed a bit so splitting fits a little bit better
+- I need to fix the emulator so I can test on other devices
+- I think I have more on the paper by my desk
+- Create a Logger and log important events
