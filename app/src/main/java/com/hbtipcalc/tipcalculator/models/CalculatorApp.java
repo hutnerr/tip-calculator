@@ -28,7 +28,7 @@ public class CalculatorApp extends Application
         this.calculator = new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
     }
 
-    // Getter methods
+    // getter methods
     public Settings getSettings() { return this.settings; }
     public CTheme getCTheme() { return this.ctheme; }
     public Calculator getCalculator() { return this.calculator; }

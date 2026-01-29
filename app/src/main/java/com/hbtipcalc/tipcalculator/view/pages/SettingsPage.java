@@ -17,6 +17,7 @@ import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
 import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
+import com.hbtipcalc.tipcalculator.view.elements.ThemeDropDown;
 
 /**
  * A place for users to change their settings.
@@ -182,26 +183,19 @@ public class SettingsPage extends BasePage
 
     private void generateThemeOption()
     {
-        DropDown dropDown = new DropDown(ctx);
+        ThemeDropDown themeDropDown = new ThemeDropDown(ctx);
 
-        String[] themes = {
-                "Gruvbox",
-                "Dracula",
-                "Mocha",
-                "Frostbite",
-                "Sunset",
-                "Earth",
-                "Neon Slate"
-        };
+        // Set all available themes
+        themeDropDown.setThemes(CTheme.values());
 
-        dropDown.setItems(themes);
-
+        // Set the current theme as selected
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         CTheme currentTheme = app.getCTheme();
-        dropDown.setSelection(currentTheme.getID());
+        themeDropDown.setSelectedTheme(currentTheme);
 
-        dropDown.addObserver((position, value) -> {
-            CTheme newTheme = CTheme.values()[position];
+        // Add observer to handle theme changes
+        themeDropDown.addObserver((position, value) -> {
+            CTheme newTheme = themeDropDown.getSelectedTheme();
 
             // Save the new theme to settings
             Settings.getInstance().setTheme(newTheme);
@@ -214,7 +208,7 @@ public class SettingsPage extends BasePage
             }
         });
 
-        ElementContainer container = new ElementContainer(ctx, "Theme", dropDown);
+        ElementContainer container = new ElementContainer(ctx, "Theme", themeDropDown);
         layout.addView(container);
     }
 }

@@ -40,27 +40,34 @@ public class TipCalculator
 
         BigDecimal tipAmount = calculateTip(inAmount, tip);
         BigDecimal total = inAmount.add(tipAmount);
-
-        // Apply rounding to total
         BigDecimal roundedTotal = applyRounding(total, roundingFlag);
 
-        // IMPORTANT: Ensure rounded total is never less than the original bill
+        // ensure rounded total is never less than the original bill
         if (roundedTotal.compareTo(inAmount) < 0)
         {
-            roundedTotal = inAmount; // Can't pay less than the bill!
+            roundedTotal = inAmount;
         }
 
-        // Recalculate tip based on rounded total
         BigDecimal adjustedTip = roundedTotal.subtract(inAmount);
-
         return new TipResult(adjustedTip, roundedTotal);
     }
 
+    /**
+     * Overloaded calculate method which takes in a String instead of a BigDecimal.
+     * See above for full spec.
+     */
     public static TipResult calculate(String inAmount, int tip, RoundingFlag roundingFlag)
     {
         return calculate(new BigDecimal(inAmount), tip, roundingFlag);
     }
 
+    /**
+     * Helper to calculate the actual tip.
+     *
+     * @param inAmount The amount initial Bill amount
+     * @param tip The percentage. I.e. 15
+     * @return The tip for this bill amount and tip percentage.
+     */
     private static BigDecimal calculateTip(BigDecimal inAmount, int tip)
     {
         BigDecimal tipPercent = new BigDecimal(tip).divide(DIVISOR, 4, RoundingMode.HALF_UP);
@@ -68,6 +75,13 @@ public class TipCalculator
         return tipAmount;
     }
 
+    /**
+     * Rounds the total based on a specific flag. Can either not round, round up, round down, or dynamically round.
+     *
+     * @param total The total of the bill.
+     * @param roundingFlag The flag. NONE, UP, DOWN, or DYNAMIC
+     * @return The new total after it has been rounded.
+     */
     private static BigDecimal applyRounding(BigDecimal total, RoundingFlag roundingFlag)
     {
         switch (roundingFlag)
