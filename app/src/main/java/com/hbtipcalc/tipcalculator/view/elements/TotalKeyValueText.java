@@ -9,7 +9,7 @@ public class TotalKeyValueText extends KeyValueText implements CalculatorObserve
 {
     public TotalKeyValueText(Context ctx)
     {
-        super(ctx, "Total Amount", "$0.00", true);
+        super(ctx, "Total Amount", "---", true);
     }
 
     @Override

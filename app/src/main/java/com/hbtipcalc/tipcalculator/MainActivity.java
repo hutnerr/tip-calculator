@@ -1,5 +1,6 @@
 package com.hbtipcalc.tipcalculator;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
         rootLayout.setBackgroundColor(((CalculatorApp) getApplication()).getCTheme().getBackgroundColor());
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // vertical only
         setContentView(rootLayout);
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);

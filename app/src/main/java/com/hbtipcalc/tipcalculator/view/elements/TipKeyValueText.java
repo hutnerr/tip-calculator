@@ -9,7 +9,7 @@ public class TipKeyValueText extends KeyValueText implements CalculatorObserver
 {
     public TipKeyValueText(Context ctx)
     {
-        super(ctx, "Tip Amount", "$0.00", true);
+        super(ctx, "Tip Amount", "---", true);
     }
 
     @Override

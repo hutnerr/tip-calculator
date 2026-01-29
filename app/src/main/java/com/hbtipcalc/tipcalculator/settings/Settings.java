@@ -4,8 +4,10 @@ import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.rxjava3.RxDataStore;
 
+import com.hbtipcalc.tipcalculator.math.TipCalculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+import com.hbtipcalc.tipcalculator.models.TipResult;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,6 +54,7 @@ public class Settings
                 this.roundFlag = flagValue != null ? RoundingFlag.fromInt(flagValue) : DEFAULT_ROUND_FLAG;
 
                 String curr = prefs.get(SettingsKeys.CURRENCY);
+                TipResult.setCurrencySymbol(curr);
                 this.currency = curr != null ? curr : DEFAULT_CURRENCY;
 
                 Integer themeId = prefs.get(SettingsKeys.THEME);
@@ -88,6 +91,7 @@ public class Settings
     public void setCurrency(String currency)
     {
         this.currency = currency;
+        TipResult.setCurrencySymbol(currency);
         saveValue(SettingsKeys.CURRENCY, currency);
     }
 
