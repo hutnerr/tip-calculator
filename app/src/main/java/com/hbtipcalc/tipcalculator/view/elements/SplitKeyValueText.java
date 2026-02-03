@@ -9,7 +9,7 @@ public class SplitKeyValueText extends KeyValueText implements CalculatorObserve
 {
     public SplitKeyValueText(Context ctx)
     {
-        super(ctx, "Split Amount", "$0.00", true);
+        super(ctx, "Split Amount", "----", true);
     }
 
     @Override
@@ -20,6 +20,9 @@ public class SplitKeyValueText extends KeyValueText implements CalculatorObserve
         // then update it
         // maybe alongside the calculator, i have a splitter controller which
         // i can use as a mediator
+
+
         setValueText(result.getFormattedTip());
+        setValueText(result.getFormattedSplit());
     }
 }

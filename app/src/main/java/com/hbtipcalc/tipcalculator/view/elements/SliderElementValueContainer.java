@@ -39,7 +39,7 @@ public class SliderElementValueContainer extends ElementValueContainer implement
     }
 
     @Override
-    public void handleSliderChange(int newProgress)
+    public void handleSliderChange(int newProgress, String id)
     {
         setValue(newProgress + postfix);
     }

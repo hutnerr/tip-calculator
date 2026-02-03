@@ -26,7 +26,7 @@ public class TipCalculator
      * @param roundingFlag to round after calculating the tip? NONE, UP, DOWN, or DYNAMIC
      * @return TipResult containing the tip amount and the total amount
      */
-    public static TipResult calculate(BigDecimal inAmount, int tip, RoundingFlag roundingFlag)
+    public static TipResult calculate(BigDecimal inAmount, int tip, RoundingFlag roundingFlag, int splitCount)
     {
         if (inAmount.compareTo(BigDecimal.ZERO) < 0)
         {
@@ -36,6 +36,11 @@ public class TipCalculator
         if (tip < 0)
         {
             throw new IllegalArgumentException("Negative Tip");
+        }
+
+        if (splitCount < 1)
+        {
+            throw new IllegalArgumentException("Split count must be at least 1");
         }
 
         BigDecimal tipAmount = calculateTip(inAmount, tip);
@@ -49,16 +54,23 @@ public class TipCalculator
         }
 
         BigDecimal adjustedTip = roundedTotal.subtract(inAmount);
-        return new TipResult(adjustedTip, roundedTotal);
+
+        BigDecimal splitAmt = roundedTotal.divide(
+                new BigDecimal(splitCount),
+                2,
+                RoundingMode.HALF_UP
+        );
+
+        return new TipResult(adjustedTip, roundedTotal, splitAmt);
     }
 
     /**
      * Overloaded calculate method which takes in a String instead of a BigDecimal.
      * See above for full spec.
      */
-    public static TipResult calculate(String inAmount, int tip, RoundingFlag roundingFlag)
+    public static TipResult calculate(String inAmount, int tip, RoundingFlag roundingFlag, int splitCount)
     {
-        return calculate(new BigDecimal(inAmount), tip, roundingFlag);
+        return calculate(new BigDecimal(inAmount), tip, roundingFlag, splitCount);
     }
 
     /**

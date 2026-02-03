@@ -110,7 +110,7 @@ public class SettingsPage extends BasePage
 
     private void generateDefaultTipOption()
     {
-        Slider slider = new Slider(ctx);
+        Slider slider = new Slider(ctx, "tipsetting");
         slider.setBounds(0, 50, true);
 
         SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Default Tip Percent", slider, "%");
@@ -119,7 +119,7 @@ public class SettingsPage extends BasePage
         int defaultTipPc = Settings.getInstance().getTipPercentage();
         slider.setProgress(defaultTipPc);
         slider.addObserver(container);
-        slider.addObserver(value -> Settings.getInstance().setTipPercentage(value));
+        slider.addObserver((value, id) -> Settings.getInstance().setTipPercentage(value));
 
         container.setValue(defaultTipPc + "%");
     }

@@ -24,6 +24,7 @@ public class Calculator implements SliderObserver, TextBoxObserver {
     private BigDecimal billAmt;
     private int tipPercent;
     private RoundingFlag roundingFlag;
+    private int splitCount;
 
     /**
      * Constructor.
@@ -38,11 +39,17 @@ public class Calculator implements SliderObserver, TextBoxObserver {
         this.billAmt = billAmt;
         this.tipPercent = tipPercent;
         this.roundingFlag = roundingFlag;
+        this.splitCount = 2;
     }
 
     public void setRoundingFlag(RoundingFlag flag)
     {
         this.roundingFlag = flag;
+    }
+
+    public void setSplitCount(int splitCount)
+    {
+        this.splitCount = splitCount;
     }
 
     /**
@@ -51,7 +58,7 @@ public class Calculator implements SliderObserver, TextBoxObserver {
     public void calculate()
     {
         System.out.println("DEBUG: billAmt=" + billAmt + ", tipPercent=" + tipPercent + ", roundingFlag=" + roundingFlag);
-        TipResult result = TipCalculator.calculate(billAmt, tipPercent, roundingFlag);
+        TipResult result = TipCalculator.calculate(billAmt, tipPercent, roundingFlag, splitCount);
         System.out.println("DEBUG: result tip=" + result.getTip() + ", total=" + result.getTotal());
         notifyObservers(result);
     }
@@ -96,9 +103,16 @@ public class Calculator implements SliderObserver, TextBoxObserver {
      * @param newVal The new tip percent
      */
     @Override
-    public void handleSliderChange(int newVal)
+    public void handleSliderChange(int newVal, String sliderID)
     {
-        this.tipPercent = newVal;
+        if ("tip".equals(sliderID))
+        {
+            this.tipPercent = newVal;
+        }
+        else if ("split".equals(sliderID))
+        {
+            this.splitCount = newVal;
+        }
         calculate();
     }
 
@@ -124,5 +138,10 @@ public class Calculator implements SliderObserver, TextBoxObserver {
     public BigDecimal getBillAmt()
     {
         return this.billAmt;
+    }
+
+    public int getSplitCount()
+    {
+        return this.splitCount;
     }
 }

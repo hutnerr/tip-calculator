@@ -42,6 +42,8 @@ public class CalculatorPage extends BasePage
     private IconButton settingsBtn;
     private TextBox billAmount;
 
+    private Slider splitSlider;
+
     private SliderElementValueContainer splitSliderContainer;
     private SplitKeyValueText splitKeyValueText;
 
@@ -91,6 +93,8 @@ public class CalculatorPage extends BasePage
         numPad.setLayoutParams(numPadParams);
 
         numPad.addObserver(billAmount);
+
+        splitSlider.setProgress(calculator.getSplitCount());
 
         root.addView(numPad);
         calculator.calculate();
@@ -158,22 +162,25 @@ public class CalculatorPage extends BasePage
 
     private void generateShareField()
     {
-        Slider slider = new Slider(ctx);
+        Slider slider = new Slider(ctx, "split");
         slider.setBounds(2, 10, false);
 
         slider.setProgress(0); // 0, but would actually be 2 cause our minimum
 
+        this.splitSlider = slider;
         this.splitSliderContainer = new SliderElementValueContainer(ctx, "Split", slider, " people");
         layout.addView(splitSliderContainer);
 
         slider.addObserver(splitSliderContainer);
+        slider.addObserver(calculator);
+
         splitSliderContainer.setValue(slider.getProgress() + " people");
     }
 
     // TODO: eventually have this match based on the user settings.
     private void generateTipPercentField()
     {
-        Slider slider = new Slider(ctx);
+        Slider slider = new Slider(ctx, "tip");
         slider.setBounds(0, 50, true);
 
         SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Tip Percent", slider, "%");
@@ -203,6 +210,7 @@ public class CalculatorPage extends BasePage
 
         calculator.addObserver(tipText);
         calculator.addObserver(totalText);
+        calculator.addObserver(splitKeyValueText);
 
         layout.addView(resultsContainer);
     }

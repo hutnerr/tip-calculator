@@ -14,13 +14,15 @@ public class Slider extends LinearLayout
 {
     private final List<SliderObserver> observers;
     private final SeekBar seekBar;
+    private String sliderID;
     private int min = 0;
     private int max = 100;
 
-    public Slider(Context ctx)
+    public Slider(Context ctx, String sid)
     {
         super(ctx);
 
+        this.sliderID = sid;
         this.observers = new ArrayList<>();
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
@@ -76,6 +78,16 @@ public class Slider extends LinearLayout
         return seekBar.getProgress() + min;
     }
 
+    public void setID(String id)
+    {
+        this.sliderID = id;
+    }
+
+    public String getID()
+    {
+        return this.sliderID;
+    }
+
     public void setBounds(int min, int max, boolean reset)
     {
         setMinium(min);
@@ -102,7 +114,7 @@ public class Slider extends LinearLayout
     {
         for (SliderObserver observer : observers)
         {
-            observer.handleSliderChange(value);
+            observer.handleSliderChange(value, sliderID);
         }
     }
 

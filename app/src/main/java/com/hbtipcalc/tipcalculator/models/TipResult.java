@@ -11,6 +11,7 @@ public class TipResult
 
     private final BigDecimal tip;
     private final BigDecimal total;
+    private final BigDecimal split;
 
     /**
      * Constructor.
@@ -18,10 +19,11 @@ public class TipResult
      * @param tip The dollar amount of the tip.
      * @param total The dollar amount of the total.
      */
-    public TipResult(BigDecimal tip, BigDecimal total)
+    public TipResult(BigDecimal tip, BigDecimal total, BigDecimal split)
     {
         this.tip = tip;
         this.total = total;
+        this.split = split;
     }
 
     // Getters for instance variables
@@ -32,6 +34,10 @@ public class TipResult
     public BigDecimal getTotal()
     {
         return this.total;
+    }
+    public BigDecimal getSplit()
+    {
+        return this.split;
     }
     public BigDecimal getBill() { return this.total.subtract(this.tip); }
 
@@ -44,16 +50,18 @@ public class TipResult
     {
         return formatBD(tip);
     }
+    public String getFormattedSplit()
+    {
+        return formatBD(split);
+    }
     public String getFormattedTotal()
     {
         return formatBD(total);
     }
     public String getFormattedBill() { return formatBD(getBill()); }
 
-
     public static void setCurrencySymbol(String symbol)
     {
         currencySymbol = symbol;
     }
-
 }

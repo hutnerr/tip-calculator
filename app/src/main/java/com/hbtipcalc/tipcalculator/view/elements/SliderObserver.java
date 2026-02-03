@@ -10,5 +10,5 @@ public interface SliderObserver
      * 
      * @param newProgress The new progress of the slider
      */
-    void handleSliderChange(int newProgress);
+    void handleSliderChange(int newProgress, String sliderID);
 }
