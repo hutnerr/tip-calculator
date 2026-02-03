@@ -9,13 +9,16 @@ import com.hbtipcalc.tipcalculator.view.elements.TextBoxObserver;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * This is the class that will receive updates from the view, perform calculations, then
  * send them back to the UI. It also stores the relevant data for the calculator.
  */
-public class Calculator implements SliderObserver, TextBoxObserver
-{
+public class Calculator implements SliderObserver, TextBoxObserver {
+    private static final String[] CURRENCIES = { "$", "€", "£", "₹", "₣", "R", "kr" };
+    private static final Pattern CURRENCY_PREFIX = Pattern.compile("^\\s*(?:\\$|€|£|₹|₣|R|kr)\\s*");
+
     private final List<CalculatorObserver> observers;
 
     private BigDecimal billAmt;
@@ -99,10 +102,27 @@ public class Calculator implements SliderObserver, TextBoxObserver
         calculate();
     }
 
-    @Override
     public void handleText(String newText)
     {
-        this.billAmt = new BigDecimal(newText);
-        calculate();
+        if (newText == null || newText.isBlank()) {
+            return;
+        }
+
+        String cleaned = CURRENCY_PREFIX
+                .matcher(newText)
+                .replaceFirst("")
+                .replace(",", "")
+                .trim();
+
+        try {
+            this.billAmt = new BigDecimal(cleaned);
+            calculate();
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    public BigDecimal getBillAmt()
+    {
+        return this.billAmt;
     }
 }

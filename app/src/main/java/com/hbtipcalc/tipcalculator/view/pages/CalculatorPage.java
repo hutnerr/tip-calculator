@@ -93,7 +93,10 @@ public class CalculatorPage extends BasePage
         numPad.addObserver(billAmount);
 
         root.addView(numPad);
+        calculator.calculate();
 
+        double temp = calculator.getBillAmt().doubleValue();
+        billAmount.setValue(temp);
         toggleSplit(); // SPLIT OFF BY DEFAULT FOR NOW
     }
 

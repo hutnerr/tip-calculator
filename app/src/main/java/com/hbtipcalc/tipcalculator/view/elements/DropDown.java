@@ -23,6 +23,7 @@ public class DropDown extends LinearLayout
     private final CTheme theme;
     private final TextView selectedView;
     private final TextView arrowView;
+    private final LinearLayout selectedContainer;
     private PopupWindow popupWindow;
     private int selectedPosition = 0;
 
@@ -38,9 +39,13 @@ public class DropDown extends LinearLayout
 
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_VERTICAL);
+        setLayoutParams(new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+        ));
 
         // Create a horizontal container for the text and arrow
-        LinearLayout selectedContainer = new LinearLayout(ctx);
+        selectedContainer = new LinearLayout(ctx);
         selectedContainer.setOrientation(HORIZONTAL);
         selectedContainer.setLayoutParams(new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT,
@@ -120,13 +125,13 @@ public class DropDown extends LinearLayout
         LinearLayout dropdownLayout = new LinearLayout(getContext());
         dropdownLayout.setOrientation(VERTICAL);
         dropdownLayout.setBackgroundColor(theme.getBackgroundSecColor());
-        dropdownLayout.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2)); // Add padding for border
+        dropdownLayout.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
 
-        // round corners with border - THIS IS THE BORDER YOU WANTED
+        // round corners with border
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(theme.getBackgroundSecColor());
         drawable.setCornerRadii(new float[]{0, 0, 0, 0, 20, 20, 20, 20});
-        drawable.setStroke(dpToPx(3), theme.getAccentColor()); // 3dp border with accent color
+        drawable.setStroke(dpToPx(3), theme.getAccentColor());
         dropdownLayout.setBackground(drawable);
         dropdownLayout.setClipToOutline(true);
 
@@ -149,7 +154,7 @@ public class DropDown extends LinearLayout
             itemView.setOnClickListener(v -> {
                 setSelection(position);
                 popupWindow.dismiss();
-                arrowView.setText("▼"); // Reset arrow when item selected
+                arrowView.setText("▼");
             });
 
             dropdownLayout.addView(itemView);
@@ -161,23 +166,15 @@ public class DropDown extends LinearLayout
         scrollView.setVerticalScrollBarEnabled(true);
         scrollView.setScrollbarFadingEnabled(false);
 
-        // Calculate max height - make sure it doesn't go off screen
+        // Calculate max height
         android.util.DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         int screenHeight = displayMetrics.heightPixels;
 
-        // Get the location of the selected view on screen
-        int[] location = new int[2];
-        this.getLocationOnScreen(location);
-        int dropdownTop = location[1] + this.getHeight();
-
-        // Calculate available space below the dropdown
-        int availableSpace = screenHeight - dropdownTop - dpToPx(50); // 50dp margin from bottom
-
-        // Set max height to smaller of: 60% of screen or available space
-        int maxHeight = Math.min((int)(screenHeight * 0.6), availableSpace);
+        // Simple max height - 40% of screen
+        int maxHeight = (int)(screenHeight * 0.4);
         maxHeight = Math.max(maxHeight, dpToPx(150)); // Minimum height of 150dp
 
-        int width = this.getWidth();
+        int width = selectedContainer.getWidth();
 
         // Create popup window with scrollable content
         popupWindow = new PopupWindow(
@@ -192,8 +189,8 @@ public class DropDown extends LinearLayout
         // Dismiss listener to reset arrow
         popupWindow.setOnDismissListener(() -> arrowView.setText("▼"));
 
-        // show below selected view
-        popupWindow.showAsDropDown(this, 0, 15);
+        // ALWAYS show below
+        popupWindow.showAsDropDown(selectedContainer, 0, 15);
     }
 
     public void setItems(List<String> items)

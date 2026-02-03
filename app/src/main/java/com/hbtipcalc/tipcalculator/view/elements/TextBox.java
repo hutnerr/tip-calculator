@@ -16,21 +16,23 @@ public class TextBox extends androidx.appcompat.widget.AppCompatTextView impleme
 {
     private static final int MAX_DIGITS = 9;
     private double value;
-    private final DecimalFormat formatter = new DecimalFormat("0.00");
+    private DecimalFormat formatter;
     private CTheme t;
     private List<TextBoxObserver> observers;
 
     public TextBox(Context ctx)
     {
         super(ctx);
-
         this.observers = new ArrayList<>();
-
-        value = 0.0;
-        setText(formatter.format(value));
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.t = app.getCTheme();
+
+        String c = app.getSettings().getCurrency();
+        this.formatter = new DecimalFormat(c + "0.00");
+
+        value = 0.0;
+        setText(formatter.format(value));
 
         setTextSize(t.getTileFontSize());
         setTextColor(t.getTextColor());

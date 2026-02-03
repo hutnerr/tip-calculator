@@ -17,7 +17,6 @@ import com.hbtipcalc.tipcalculator.view.elements.Header;
 import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
 import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
-import com.hbtipcalc.tipcalculator.view.elements.ThemeDropDown;
 
 /**
  * A place for users to change their settings.
@@ -50,10 +49,10 @@ public class SettingsPage extends BasePage
         generateExitBtn();
         layout.addView(header);
 
-        generateDefaultTipOption();
+        generateThemeOption();
         generateRoundingOption();
         generateCurrencyOption();
-        generateThemeOption();
+        generateDefaultTipOption();
     }
 
     @Override
@@ -183,19 +182,35 @@ public class SettingsPage extends BasePage
 
     private void generateThemeOption()
     {
-        ThemeDropDown themeDropDown = new ThemeDropDown(ctx);
+        DropDown themeDropDown = new DropDown(ctx);
 
-        // Set all available themes
-        themeDropDown.setThemes(CTheme.values());
+        // Get all themes and format their names
+        CTheme[] allThemes = CTheme.values();
+        String[] themeNames = new String[allThemes.length];
+        for (int i = 0; i < allThemes.length; i++)
+        {
+            themeNames[i] = formatThemeName(allThemes[i].name());
+        }
+
+        themeDropDown.setItems(themeNames);
 
         // Set the current theme as selected
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         CTheme currentTheme = app.getCTheme();
-        themeDropDown.setSelectedTheme(currentTheme);
+
+        // Find and set the current theme
+        for (int i = 0; i < allThemes.length; i++)
+        {
+            if (allThemes[i] == currentTheme)
+            {
+                themeDropDown.setSelection(i);
+                break;
+            }
+        }
 
         // Add observer to handle theme changes
         themeDropDown.addObserver((position, value) -> {
-            CTheme newTheme = themeDropDown.getSelectedTheme();
+            CTheme newTheme = allThemes[position];
 
             // Save the new theme to settings
             Settings.getInstance().setTheme(newTheme);
@@ -204,11 +219,32 @@ public class SettingsPage extends BasePage
             // Restart the activity to apply the theme
             if (ctx instanceof android.app.Activity) {
                 android.app.Activity activity = (android.app.Activity) ctx;
-                activity.recreate(); // This restarts the activity
+                activity.recreate();
             }
         });
 
         ElementContainer container = new ElementContainer(ctx, "Theme", themeDropDown);
         layout.addView(container);
+    }
+
+    // Helper method to format theme names
+    private String formatThemeName(String name)
+    {
+        String[] words = name.split("_");
+        StringBuilder formatted = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++)
+        {
+            String word = words[i];
+            formatted.append(word.charAt(0))
+                    .append(word.substring(1).toLowerCase());
+
+            if (i < words.length - 1)
+            {
+                formatted.append(" ");
+            }
+        }
+
+        return formatted.toString();
     }
 }
