@@ -36,7 +36,7 @@ public class ElementContainer extends LinearLayout
 
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        setPadding(60, 20, 60, 10);
+        setPadding(60, 10, 60, 10);
 
         // layout for the top labels
         this.labelContainer = new LinearLayout(ctx);

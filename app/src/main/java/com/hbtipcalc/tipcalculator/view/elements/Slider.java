@@ -31,6 +31,9 @@ public class Slider extends LinearLayout
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
+        int verticalPadding = dpToPx(ctx, -8); // Adjust this value as needed
+        setPadding(0, verticalPadding, 0, verticalPadding);
+
         // minus button
         IconButton minusBtn = new IconButton(ctx, R.drawable.minus);
         minusBtn.setOnClickListener(v -> setProgress(getProgress() - 1));
@@ -126,5 +129,11 @@ public class Slider extends LinearLayout
     public void removeObserver(SliderObserver obs)
     {
         observers.remove(obs);
+    }
+
+    private int dpToPx(Context ctx, int dp)
+    {
+        float density = ctx.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }

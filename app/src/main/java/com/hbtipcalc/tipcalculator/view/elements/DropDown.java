@@ -52,7 +52,7 @@ public class DropDown extends LinearLayout
                 LayoutParams.WRAP_CONTENT
         ));
         selectedContainer.setBackgroundColor(theme.getBackgroundSecColor());
-        selectedContainer.setPadding(20, 35, 20, 35);
+        selectedContainer.setPadding(20, 15, 20, 15);
         selectedContainer.setGravity(Gravity.CENTER_VERTICAL);
 
         // Text view for selected item

@@ -101,7 +101,7 @@ public class CalculatorPage extends BasePage
 
         double temp = calculator.getBillAmt().doubleValue();
         billAmount.setValue(temp);
-        toggleSplit(); // SPLIT OFF BY DEFAULT FOR NOW
+        // toggleSplit(); // SPLIT OFF BY DEFAULT FOR NOW
     }
 
     @Override
@@ -168,7 +168,7 @@ public class CalculatorPage extends BasePage
         slider.setProgress(0); // 0, but would actually be 2 cause our minimum
 
         this.splitSlider = slider;
-        this.splitSliderContainer = new SliderElementValueContainer(ctx, "Split", slider, " people");
+        this.splitSliderContainer = new SliderElementValueContainer(ctx, "Split", slider, " People");
         layout.addView(splitSliderContainer);
 
         slider.addObserver(splitSliderContainer);

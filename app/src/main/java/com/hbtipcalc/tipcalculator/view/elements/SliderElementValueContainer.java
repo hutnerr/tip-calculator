@@ -2,6 +2,7 @@ package com.hbtipcalc.tipcalculator.view.elements;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * This is an element value container which allows a slider to change its value.
@@ -42,5 +43,11 @@ public class SliderElementValueContainer extends ElementValueContainer implement
     public void handleSliderChange(int newProgress, String id)
     {
         setValue(newProgress + postfix);
+    }
+
+    private int dpToPx(Context ctx, int dp)
+    {
+        float density = ctx.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }
