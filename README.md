@@ -49,7 +49,10 @@ This project includes portions of open-source color theme palettes:
 - **[Dracula Theme](https://github.com/dracula/dracula-theme)** by Zeno Rocha and contributors - licensed under the [MIT License](https://github.com/dracula/dracula-theme/blob/master/LICENSE).
 
 ## Screenshots
-Coming Soon!
+| ![](https://www.hunter-baker.com/resources/images/projects/tc1.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc2.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc3.jpg) |
+|---|---|---|
+| ![](https://www.hunter-baker.com/resources/images/projects/tc4.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc5.jpg) | |
+
 
 
 ## Support
