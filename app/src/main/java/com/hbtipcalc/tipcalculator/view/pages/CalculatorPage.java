@@ -50,6 +50,8 @@ public class CalculatorPage extends BasePage
     private CTheme t;
     private Calculator calculator;
 
+    private CalculatorApp app;
+
     /**
      * Constructor.
      *
@@ -60,6 +62,7 @@ public class CalculatorPage extends BasePage
         super(ctx);
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        this.app = app;
         this.t = app.getCTheme();
         this.calculator = app.getCalculator();
 
@@ -101,7 +104,12 @@ public class CalculatorPage extends BasePage
 
         double temp = calculator.getBillAmt().doubleValue();
         billAmount.setValue(temp);
-        // toggleSplit(); // SPLIT OFF BY DEFAULT FOR NOW
+
+        // if settings say leave split on, toggle it on
+        if (app.getSettings().isSplitActive())
+        {
+            toggleSplit();
+        }
     }
 
     @Override
@@ -123,11 +131,13 @@ public class CalculatorPage extends BasePage
         {
             splitSliderContainer.setVisibility(View.GONE);
             splitKeyValueText.setVisibility(View.GONE);
+            this.app.getSettings().setSplitActive(true);
         }
         else
         {
             splitSliderContainer.setVisibility(View.VISIBLE);
             splitKeyValueText.setVisibility(View.VISIBLE);
+            this.app.getSettings().setSplitActive(false);
         }
     }
 
