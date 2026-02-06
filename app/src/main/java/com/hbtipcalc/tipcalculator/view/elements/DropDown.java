@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DropDown so you can list, show, and select items.
+ * Custom dropdown component for displaying and selecting items from a list.
+ * Features a collapsible popup menu with themed styling and observer pattern
+ * for selection change notifications.
  */
 public class DropDown extends LinearLayout
 {
@@ -31,9 +33,9 @@ public class DropDown extends LinearLayout
     private int selectedPosition = 0;
 
     /**
-     * Constructor.
+     * Constructs a new DropDown component.
      *
-     * @param ctx App context
+     * @param ctx The application context
      */
     public DropDown(Context ctx)
     {
@@ -85,7 +87,7 @@ public class DropDown extends LinearLayout
         ));
         arrowView.setTextColor(theme.getTextColor());
         arrowView.setTextSize(theme.getTextFontSize());
-        arrowView.setText("▼"); // Down arrow
+        arrowView.setText("▼");
         arrowView.setPadding(10, 0, 0, 0);
 
         selectedContainer.addView(selectedView);
@@ -96,6 +98,15 @@ public class DropDown extends LinearLayout
         addView(selectedContainer);
     }
 
+    /**
+     * Creates a view for an individual dropdown item.
+     *
+     * @param context The application context
+     * @param itemText The text to display for this item
+     * @param position The position of this item in the list
+     * @param isSelected Whether this item is currently selected
+     * @return A configured View for the dropdown item
+     */
     protected View createItemView(Context context, String itemText, int position, boolean isSelected)
     {
         TextView itemView = new TextView(context);
@@ -115,19 +126,28 @@ public class DropDown extends LinearLayout
         return itemView;
     }
 
+    /**
+     * Toggles the dropdown menu between open and closed states.
+     * Updates the arrow indicator accordingly.
+     */
     private void toggleDropdown()
     {
         if (popupWindow != null && popupWindow.isShowing())
         {
             popupWindow.dismiss();
-            arrowView.setText("▼"); // Down arrow when closed
+            arrowView.setText("▼");
             return;
         }
 
-        arrowView.setText("▲"); // Up arrow when open
+        arrowView.setText("▲");
         showDropdown();
     }
 
+    /**
+     * Displays the dropdown popup menu with all available items.
+     * The popup is positioned below the selection container and includes
+     * rounded corners, themed styling, and scrolling for long lists.
+     */
     private void showDropdown()
     {
         LinearLayout dropdownLayout = new LinearLayout(getContext());
@@ -180,7 +200,7 @@ public class DropDown extends LinearLayout
 
         // simple max height - 40% of screen
         int maxHeight = (int)(screenHeight * 0.4);
-        maxHeight = Math.max(maxHeight, dpToPx(150)); // Minimum height of 150dp
+        maxHeight = Math.max(maxHeight, dpToPx(150));
 
         int width = selectedContainer.getWidth();
 
@@ -197,25 +217,20 @@ public class DropDown extends LinearLayout
         // dismiss listener to reset arrow
         popupWindow.setOnDismissListener(() -> arrowView.setText("▼"));
 
-        // ALWAYS show below
         popupWindow.showAsDropDown(selectedContainer, 0, 15);
     }
 
-    public void setItems(List<String> items)
-    {
-        this.items.clear();
-        this.items.addAll(items);
-
-        if (!items.isEmpty() && selectedPosition < items.size())
-        {
-            selectedView.setText(items.get(selectedPosition));
-        }
-    }
-
+    /**
+     * Sets the items to display in the dropdown from an array.
+     * If items exist and a valid selection is set, updates the display.
+     *
+     * @param items The array of items to display
+     */
     public void setItems(String[] items)
     {
         this.items.clear();
-        for (String item : items) {
+        for (String item : items)
+        {
             this.items.add(item);
         }
 
@@ -225,6 +240,12 @@ public class DropDown extends LinearLayout
         }
     }
 
+    /**
+     * Sets the currently selected item by position.
+     * Notifies all registered observers of the selection change.
+     *
+     * @param position The index of the item to select
+     */
     public void setSelection(int position)
     {
         if (position >= 0 && position < items.size())
@@ -235,18 +256,12 @@ public class DropDown extends LinearLayout
         }
     }
 
-    public void setSelection(String value)
-    {
-        int index = items.indexOf(value);
-        if (index >= 0)
-        {
-            setSelection(index);
-        }
-    }
-
-    public int getSelectedPosition() { return selectedPosition; }
-    public String getSelectedItem() { return selectedPosition >= 0 && selectedPosition < items.size() ? items.get(selectedPosition) : null; }
-
+    /**
+     * Notifies all registered observers of a selection change.
+     *
+     * @param position The position of the newly selected item
+     * @param value The value of the newly selected item
+     */
     private void notifyObservers(int position, String value)
     {
         for (DropDownObserver observer : observers)
@@ -255,16 +270,36 @@ public class DropDown extends LinearLayout
         }
     }
 
+    /**
+     * Registers an observer to be notified of selection changes.
+     * Prevents duplicate registrations.
+     *
+     * @param obs The observer to add
+     */
     public void addObserver(DropDownObserver obs)
     {
-        if (obs != null && !observers.contains(obs)) observers.add(obs);
+        if (obs != null && !observers.contains(obs))
+        {
+            observers.add(obs);
+        }
     }
 
+    /**
+     * Unregisters an observer from selection change notifications.
+     *
+     * @param obs The observer to remove
+     */
     public void removeObserver(DropDownObserver obs)
     {
         observers.remove(obs);
     }
 
+    /**
+     * Converts density-independent pixels (dp) to actual pixels (px).
+     *
+     * @param dp The value in dp to convert
+     * @return The equivalent value in pixels
+     */
     private int dpToPx(int dp)
     {
         float density = getContext().getResources().getDisplayMetrics().density;

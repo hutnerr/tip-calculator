@@ -17,6 +17,7 @@ import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.settings.Settings;
+import com.hbtipcalc.tipcalculator.util.Clogger;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
 import com.hbtipcalc.tipcalculator.view.elements.ElementValueContainer;
 import com.hbtipcalc.tipcalculator.view.elements.Header;
@@ -31,7 +32,9 @@ import com.hbtipcalc.tipcalculator.view.elements.TipKeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.TotalKeyValueText;
 
 /**
- * This is the main page that the app will rest on.
+ * Main calculator page for the tip calculator application.
+ * Displays input fields for bill amount and tip percentage, optional split
+ * functionality, and calculated results including tip, total, and split amounts.
  */
 public class CalculatorPage extends BasePage
 {
@@ -53,9 +56,11 @@ public class CalculatorPage extends BasePage
     private CalculatorApp app;
 
     /**
-     * Constructor.
+     * Constructs a new CalculatorPage.
+     * Initializes all UI components including header, input fields, sliders,
+     * results display, and numpad. Restores previous state from settings.
      *
-     * @param ctx
+     * @param ctx The application context
      */
     public CalculatorPage(Context ctx)
     {
@@ -110,8 +115,14 @@ public class CalculatorPage extends BasePage
         {
             toggleSplit();
         }
+        Clogger.info("Calculator Page loaded successfully");
     }
 
+    /**
+     * Returns the root view for this page.
+     *
+     * @return The FrameLayout containing all page content
+     */
     @Override
     public View getView()
     {
@@ -119,9 +130,9 @@ public class CalculatorPage extends BasePage
     }
 
     /**
-     * Toggles the view of the splitSlider and splitTextField.
-     * Basically enables / disables them being visible.
-     * Controlled by splitBtn
+     * Toggles the visibility of the split functionality.
+     * Shows or hides the split slider and split amount result field.
+     * Updates the split active state in settings.
      */
     public void toggleSplit()
     {
@@ -131,17 +142,20 @@ public class CalculatorPage extends BasePage
         {
             splitSliderContainer.setVisibility(View.GONE);
             splitKeyValueText.setVisibility(View.GONE);
-            this.app.getSettings().setSplitActive(true);
+            this.app.getSettings().setSplitActive(false);
         }
         else
         {
             splitSliderContainer.setVisibility(View.VISIBLE);
             splitKeyValueText.setVisibility(View.VISIBLE);
-            this.app.getSettings().setSplitActive(false);
+            this.app.getSettings().setSplitActive(true);
         }
     }
 
-    // GENERATOR METHODS BELOW
+    /**
+     * Creates and configures the split button in the header.
+     * When clicked, toggles the split functionality visibility.
+     */
     private void generateSplitBtn()
     {
         if (header == null) return;
@@ -150,18 +164,27 @@ public class CalculatorPage extends BasePage
         header.addIconButton(splitBtn);
     }
 
+    /**
+     * Creates and configures the settings button in the header.
+     * When clicked, navigates to the settings page.
+     */
     private void generateSettingsBtn()
     {
         if (header == null) return;
         this.settingsBtn = new IconButton(ctx, R.drawable.settings);
         this.settingsBtn.setOnClickListener(v -> {
-            if (ctx instanceof MainActivity) {
+            if (ctx instanceof MainActivity)
+            {
                 ((MainActivity) ctx).setPage(new SettingsPage((MainActivity) ctx));
             }
         });
         header.addIconButton(settingsBtn);
     }
 
+    /**
+     * Creates and configures the bill amount input field.
+     * Connects the field to the calculator as an observer.
+     */
     private void generateBillAmountField()
     {
         this.billAmount = new TextBox(ctx);
@@ -170,12 +193,16 @@ public class CalculatorPage extends BasePage
         layout.addView(container);
     }
 
+    /**
+     * Creates and configures the split slider field.
+     * Sets the range from 2 to 10 people and connects to the calculator.
+     */
     private void generateShareField()
     {
         Slider slider = new Slider(ctx, "split");
         slider.setBounds(2, 10, false);
 
-        slider.setProgress(0); // 0, but would actually be 2 cause our minimum
+        slider.setProgress(0);
 
         this.splitSlider = slider;
         this.splitSliderContainer = new SliderElementValueContainer(ctx, "Split", slider, " People");
@@ -187,7 +214,11 @@ public class CalculatorPage extends BasePage
         splitSliderContainer.setValue(slider.getProgress() + " people");
     }
 
-    // TODO: eventually have this match based on the user settings.
+    /**
+     * Creates and configures the tip percentage slider field.
+     * Sets the range from 0% to 50% and initializes to the default tip percentage
+     * from settings.
+     */
     private void generateTipPercentField()
     {
         Slider slider = new Slider(ctx, "tip");
@@ -200,9 +231,14 @@ public class CalculatorPage extends BasePage
         slider.addObserver(this.calculator);
         int defaultTipPc = Settings.getInstance().getTipPercentage();
         slider.setProgress(defaultTipPc);
-        container.setValue(defaultTipPc + "%"); // set initially
+        container.setValue(defaultTipPc + "%");
     }
 
+    /**
+     * Creates and configures the results display section.
+     * Shows tip amount, total amount, and split amount per person.
+     * Connects all result fields to the calculator as observers.
+     */
     private void generateResultsField()
     {
         // this is the container for both of them

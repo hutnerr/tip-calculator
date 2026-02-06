@@ -10,6 +10,11 @@ import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom slider component with increment/decrement buttons.
+ * Features a seekbar with plus/minus buttons for precise value adjustment
+ * and observer pattern for value change notifications.
+ */
 public class Slider extends LinearLayout
 {
     private final List<SliderObserver> observers;
@@ -18,6 +23,12 @@ public class Slider extends LinearLayout
     private int min = 0;
     private int max = 100;
 
+    /**
+     * Constructs a new Slider component.
+     *
+     * @param ctx The application context
+     * @param sid The unique identifier for this slider
+     */
     public Slider(Context ctx, String sid)
     {
         super(ctx);
@@ -31,7 +42,7 @@ public class Slider extends LinearLayout
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        int verticalPadding = dpToPx(ctx, -8); // Adjust this value as needed
+        int verticalPadding = dpToPx(ctx, -8);
         setPadding(0, verticalPadding, 0, verticalPadding);
 
         // minus button
@@ -64,11 +75,21 @@ public class Slider extends LinearLayout
             {
                 notifyObservers(progress + min);
             }
-            @Override public void onStartTrackingTouch(SeekBar sb) {}
-            @Override public void onStopTrackingTouch(SeekBar sb) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar sb) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar sb) {}
         });
     }
 
+    /**
+     * Sets the slider's current value.
+     * The value is automatically clamped to the min/max bounds.
+     *
+     * @param value The desired slider value
+     */
     public void setProgress(int value)
     {
         int clamped = Math.max(min, Math.min(value, max));
@@ -76,28 +97,56 @@ public class Slider extends LinearLayout
         notifyObservers(clamped);
     }
 
+    /**
+     * Gets the slider's current value.
+     *
+     * @return The current slider value (includes minimum offset)
+     */
     public int getProgress()
     {
         return seekBar.getProgress() + min;
     }
 
+    /**
+     * Sets the unique identifier for this slider.
+     *
+     * @param id The slider identifier
+     */
     public void setID(String id)
     {
         this.sliderID = id;
     }
 
+    /**
+     * Gets the unique identifier for this slider.
+     *
+     * @return The slider identifier
+     */
     public String getID()
     {
         return this.sliderID;
     }
 
+    /**
+     * Sets both the minimum and maximum bounds for the slider.
+     *
+     * @param min The minimum value
+     * @param max The maximum value
+     * @param reset Whether to reset the slider to the midpoint of the new range
+     */
     public void setBounds(int min, int max, boolean reset)
     {
-        setMinium(min);
+        setMinimum(min);
         setMax(max, reset);
     }
 
-    public void setMinium(int min)
+    /**
+     * Sets the minimum value for the slider.
+     * Adjusts the current progress if it falls outside the new bounds.
+     *
+     * @param min The minimum value
+     */
+    public void setMinimum(int min)
     {
         this.min = min;
         seekBar.setMax(max - min);
@@ -106,6 +155,13 @@ public class Slider extends LinearLayout
         if (p > max) setProgress(max);
     }
 
+    /**
+     * Sets the maximum value for the slider.
+     * Optionally resets the slider to the midpoint of the range.
+     *
+     * @param max The maximum value
+     * @param reset Whether to reset the slider to the midpoint
+     */
     public void setMax(int max, boolean reset)
     {
         this.max = max;
@@ -113,6 +169,11 @@ public class Slider extends LinearLayout
         if (reset) setProgress((min + max) / 2);
     }
 
+    /**
+     * Notifies all registered observers of a value change.
+     *
+     * @param value The new slider value
+     */
     public void notifyObservers(int value)
     {
         for (SliderObserver observer : observers)
@@ -121,16 +182,37 @@ public class Slider extends LinearLayout
         }
     }
 
+    /**
+     * Registers an observer to be notified of slider value changes.
+     * Prevents duplicate registrations.
+     *
+     * @param obs The observer to add
+     */
     public void addObserver(SliderObserver obs)
     {
-        if (obs != null && !observers.contains(obs)) observers.add(obs);
+        if (obs != null && !observers.contains(obs))
+        {
+            observers.add(obs);
+        }
     }
 
+    /**
+     * Unregisters an observer from slider value change notifications.
+     *
+     * @param obs The observer to remove
+     */
     public void removeObserver(SliderObserver obs)
     {
         observers.remove(obs);
     }
 
+    /**
+     * Converts density-independent pixels (dp) to actual pixels (px).
+     *
+     * @param ctx The application context
+     * @param dp The value in dp to convert
+     * @return The equivalent value in pixels
+     */
     private int dpToPx(Context ctx, int dp)
     {
         float density = ctx.getResources().getDisplayMetrics().density;
