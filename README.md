@@ -16,23 +16,11 @@ This project was created as a hands-on way to strengthen Android development ski
 - **Default Tip Percentage**: Set your preferred default tip
 - **Bill Splitting**: Split the total evenly among up to 10 people
 
-## Roadmap
-- [x] Core Calculator
-- [x] Stored Settings
-- [x] Bill Splitting Functionality
-- [ ] Animations
-- [ ] Document & Code Refactor
-- [ ] Beta Testing
-- [ ] Publish!
-
 ## Future Plans
 - Additional Tip Selection Methods
   - Preset and customizable buttons
   - Typed in directly
   - Carousel
-- Additional Options
-  - Remember last tip percentage
-  - Show bill splitting on launch
 
 <!--
 ## Links
