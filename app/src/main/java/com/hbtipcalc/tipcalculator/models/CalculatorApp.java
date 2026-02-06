@@ -4,6 +4,7 @@ import android.app.Application;
 import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.settings.Settings;
 import com.hbtipcalc.tipcalculator.settings.SettingsDataStore;
+import com.hbtipcalc.tipcalculator.util.Clogger;
 
 import java.math.BigDecimal;
 
@@ -24,8 +25,11 @@ public class CalculatorApp extends Application
         SettingsDataStore.init(this);
         Settings.getInstance().loadSettings();
         this.settings = Settings.getInstance();
+
         this.ctheme = settings.getTheme();
         this.calculator = new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
+
+        Clogger.info("CalculatorApp Initialized");
     }
 
     // getter methods
@@ -33,8 +37,6 @@ public class CalculatorApp extends Application
     public CTheme getCTheme() { return this.ctheme; }
     public Calculator getCalculator() { return this.calculator; }
 
-    public void setCTheme(CTheme t)
-    {
-        this.ctheme = t;
-    }
+    // setter methods
+    public void setCTheme(CTheme t) { this.ctheme = t; }
 }

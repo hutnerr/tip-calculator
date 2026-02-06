@@ -34,42 +34,6 @@ public enum CTheme
             Color.parseColor("#c47a3e"),
             2
     ),
-//
-//    FROSTBITE(
-//            Color.parseColor("#dce3ea"),
-//            Color.parseColor("#25303a"),
-//            Color.parseColor("#1e272f"),
-//            Color.parseColor("#303b46"),
-//            Color.parseColor("#5ac8c8"),
-//            3
-//    ),
-//
-//    SUNSET(
-//            Color.parseColor("#f3ead8"),
-//            Color.parseColor("#2a1e1f"),
-//            Color.parseColor("#1f1718"),
-//            Color.parseColor("#3a292b"),
-//            Color.parseColor("#ff7b72"),
-//            4
-//    ),
-//
-//    EARTH(
-//            Color.parseColor("#e0e2db"),
-//            Color.parseColor("#2e3d2f"),
-//            Color.parseColor("#1f2d20"),
-//            Color.parseColor("#3a4b3c"),
-//            Color.parseColor("#8f9779"),
-//            5
-//    ),
-//
-//    NEON_SLATE(
-//            Color.parseColor("#bfc7d5"),
-//            Color.parseColor("#1b1f26"),
-//            Color.parseColor("#181b21"),
-//            Color.parseColor("#242933"),
-//            Color.parseColor("#3da9fc"),
-//            6
-//    ),
     ;
 
     // color vars

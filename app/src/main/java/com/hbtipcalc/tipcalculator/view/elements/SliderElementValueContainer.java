@@ -44,10 +44,4 @@ public class SliderElementValueContainer extends ElementValueContainer implement
     {
         setValue(newProgress + postfix);
     }
-
-    private int dpToPx(Context ctx, int dp)
-    {
-        float density = ctx.getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
-    }
 }

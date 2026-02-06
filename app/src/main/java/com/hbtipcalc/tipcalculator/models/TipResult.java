@@ -9,9 +9,9 @@ public class TipResult
 {
     private static String currencySymbol = "$";
 
-    private final BigDecimal tip;
-    private final BigDecimal total;
-    private final BigDecimal split;
+    private final BigDecimal tip;   // The amount of the tip
+    private final BigDecimal total; // The total amount (bill + tip)
+    private final BigDecimal split; // The amount per person after being split
 
     /**
      * Constructor.
@@ -60,8 +60,16 @@ public class TipResult
     }
     public String getFormattedBill() { return formatBD(getBill()); }
 
+    // Sets the currency symbol so it gets formatted properly.
+    // It is static so it only has to be set on changes
     public static void setCurrencySymbol(String symbol)
     {
         currencySymbol = symbol;
+    }
+
+    // below should be called to return instead of erroring out
+    public static TipResult getInvalidTipResult()
+    {
+        return new TipResult(new BigDecimal("0.00"), new BigDecimal("0.00"), new BigDecimal("0.00"));
     }
 }

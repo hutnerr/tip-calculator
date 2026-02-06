@@ -15,11 +15,22 @@ public enum RoundingFlag
 
     private final int value;
 
+    /**
+     * Constructor
+     *
+     * @param value The integer value of the flag
+     */
     RoundingFlag(int value)
     {
         this.value = value;
     }
 
+    /**
+     * factory method to generate a RoundingFlag from an integer.
+     *
+     * @param value The integer to generate from
+     * @return The generated RoundingFlag
+     */
     public static RoundingFlag fromInt(int value)
     {
         for (RoundingFlag flag : values())
@@ -29,5 +40,6 @@ public enum RoundingFlag
         return NONE; // default if invalid value
     }
 
+    // GETTER
     public int getValue() { return value; }
 }

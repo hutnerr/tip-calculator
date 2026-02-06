@@ -2,6 +2,7 @@ package com.hbtipcalc.tipcalculator.math;
 
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
 import com.hbtipcalc.tipcalculator.models.TipResult;
+import com.hbtipcalc.tipcalculator.util.Clogger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,17 +31,20 @@ public class TipCalculator
     {
         if (inAmount.compareTo(BigDecimal.ZERO) < 0)
         {
-            throw new IllegalArgumentException("Negative In Amount");
+            Clogger.error("Negative in Amount");
+            return TipResult.getInvalidTipResult();
         }
 
         if (tip < 0)
         {
-            throw new IllegalArgumentException("Negative Tip");
+            Clogger.error("Negative Tip");
+            return TipResult.getInvalidTipResult();
         }
 
         if (splitCount < 1)
         {
-            throw new IllegalArgumentException("Split count must be at least 1");
+            Clogger.error("Split count must be at least 1");
+            return TipResult.getInvalidTipResult();
         }
 
         BigDecimal tipAmount = calculateTip(inAmount, tip);
@@ -50,6 +54,7 @@ public class TipCalculator
         // ensure rounded total is never less than the original bill
         if (roundedTotal.compareTo(inAmount) < 0)
         {
+            Clogger.warn("Rounded total was less than original bill. Fixing...");
             roundedTotal = inAmount;
         }
 
@@ -61,6 +66,7 @@ public class TipCalculator
                 RoundingMode.HALF_UP
         );
 
+        Clogger.debug("Successfully Calculated Tip");
         return new TipResult(adjustedTip, roundedTotal, splitAmt);
     }
 
@@ -98,16 +104,16 @@ public class TipCalculator
     {
         switch (roundingFlag)
         {
-            case NONE:
+            case NONE: // for clarity!!
                 return total;
             case UP:
                 return total.setScale(0, RoundingMode.CEILING);
             case DOWN:
                 return total.setScale(0, RoundingMode.FLOOR);
-            case DYNAMIC:
-                // rounds to closest int
+            case DYNAMIC: // rounds to closest int
                 return total.setScale(0, RoundingMode.HALF_UP);
             default:
+                Clogger.warn("Potentially invalid RoundingFlag");
                 return total;
         }
     }

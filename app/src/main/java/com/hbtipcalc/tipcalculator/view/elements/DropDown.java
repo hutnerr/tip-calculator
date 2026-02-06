@@ -16,6 +16,9 @@ import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DropDown so you can list, show, and select items.
+ */
 public class DropDown extends LinearLayout
 {
     private final List<DropDownObserver> observers;
@@ -27,6 +30,11 @@ public class DropDown extends LinearLayout
     private PopupWindow popupWindow;
     private int selectedPosition = 0;
 
+    /**
+     * Constructor.
+     *
+     * @param ctx App context
+     */
     public DropDown(Context ctx)
     {
         super(ctx);
@@ -44,7 +52,7 @@ public class DropDown extends LinearLayout
                 LayoutParams.WRAP_CONTENT
         ));
 
-        // Create a horizontal container for the text and arrow
+        // create a horizontal container for the text and arrow
         selectedContainer = new LinearLayout(ctx);
         selectedContainer.setOrientation(HORIZONTAL);
         selectedContainer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -55,12 +63,12 @@ public class DropDown extends LinearLayout
         selectedContainer.setPadding(20, 15, 20, 15);
         selectedContainer.setGravity(Gravity.CENTER_VERTICAL);
 
-        // Text view for selected item
+        // text view for selected item
         selectedView = new TextView(ctx);
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
                 0,
                 LayoutParams.WRAP_CONTENT,
-                1f // Takes up remaining space
+                1f // takes up remaining space
         );
         selectedView.setLayoutParams(textParams);
         selectedView.setTextColor(theme.getTextColor());
@@ -69,7 +77,7 @@ public class DropDown extends LinearLayout
         selectedView.setGravity(Gravity.CENTER_VERTICAL);
         selectedView.setText("Select...");
 
-        // Arrow view
+        // arrow view
         arrowView = new TextView(ctx);
         arrowView.setLayoutParams(new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT,
@@ -160,23 +168,23 @@ public class DropDown extends LinearLayout
             dropdownLayout.addView(itemView);
         }
 
-        // Wrap in ScrollView for scrolling
+        // wrap in ScrollView for scrolling
         ScrollView scrollView = new ScrollView(getContext());
         scrollView.addView(dropdownLayout);
         scrollView.setVerticalScrollBarEnabled(true);
         scrollView.setScrollbarFadingEnabled(false);
 
-        // Calculate max height
+        // calculate max height
         android.util.DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         int screenHeight = displayMetrics.heightPixels;
 
-        // Simple max height - 40% of screen
+        // simple max height - 40% of screen
         int maxHeight = (int)(screenHeight * 0.4);
         maxHeight = Math.max(maxHeight, dpToPx(150)); // Minimum height of 150dp
 
         int width = selectedContainer.getWidth();
 
-        // Create popup window with scrollable content
+        // create popup window with scrollable content
         popupWindow = new PopupWindow(
                 scrollView,
                 width,
@@ -186,7 +194,7 @@ public class DropDown extends LinearLayout
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
 
-        // Dismiss listener to reset arrow
+        // dismiss listener to reset arrow
         popupWindow.setOnDismissListener(() -> arrowView.setText("▼"));
 
         // ALWAYS show below

@@ -100,7 +100,6 @@ public class NumPad extends GridLayout
         );
     }
 
-
     private final View.OnClickListener onButtonClick = new View.OnClickListener()
     {
         @Override
@@ -129,7 +128,6 @@ public class NumPad extends GridLayout
     {
         observers.add(observer);
     }
-
     public void removeObserver(NumPadObserver observer)
     {
         observers.remove(observer);

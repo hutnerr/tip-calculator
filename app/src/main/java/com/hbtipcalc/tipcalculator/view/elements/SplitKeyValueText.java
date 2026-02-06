@@ -15,14 +15,6 @@ public class SplitKeyValueText extends KeyValueText implements CalculatorObserve
     @Override
     public void handleTipCalculation(TipResult result)
     {
-        // TODO: needs to get the actual tip
-        // somehow get the slider value.
-        // then update it
-        // maybe alongside the calculator, i have a splitter controller which
-        // i can use as a mediator
-
-
-        setValueText(result.getFormattedTip());
         setValueText(result.getFormattedSplit());
     }
 }
