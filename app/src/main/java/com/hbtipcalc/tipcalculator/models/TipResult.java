@@ -46,10 +46,7 @@ public class TipResult
     {
         return String.format("%s%.2f", currencySymbol, val);
     }
-    public String getFormattedTip()
-    {
-        return formatBD(tip);
-    }
+    public String getFormattedTip() { return formatBD(tip); }
     public String getFormattedSplit()
     {
         return formatBD(split);
@@ -62,10 +59,17 @@ public class TipResult
 
     // Sets the currency symbol so it gets formatted properly.
     // It is static so it only has to be set on changes
-    public static void setCurrencySymbol(String symbol)
-    {
-        currencySymbol = symbol;
+    public static void setCurrencySymbol(String symbol) {
+        if (symbol == null || symbol.trim().isEmpty())
+        {
+            currencySymbol = "";
+        }
+        else
+        {
+            currencySymbol = symbol;
+        }
     }
+
 
     // below should be called to return instead of erroring out
     public static TipResult getInvalidTipResult()

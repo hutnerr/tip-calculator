@@ -48,6 +48,7 @@ public class TextBox extends androidx.appcompat.widget.AppCompatTextView impleme
 
         setTextSize(t.getTileFontSize());
         setTextColor(t.getTextColor());
+        setTypeface(t.getFont());
         setGravity(Gravity.END);
         setPadding(30, 10, 30, 10);
         setBackgroundColor(t.getBackgroundSecColor());

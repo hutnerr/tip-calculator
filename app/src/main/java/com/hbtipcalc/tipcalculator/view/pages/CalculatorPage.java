@@ -36,8 +36,7 @@ import com.hbtipcalc.tipcalculator.view.elements.TotalKeyValueText;
  * Displays input fields for bill amount and tip percentage, optional split
  * functionality, and calculated results including tip, total, and split amounts.
  */
-public class CalculatorPage extends BasePage
-{
+public class CalculatorPage extends BasePage {
     private FrameLayout root;
     private LinearLayout layout;
     private Header header;
@@ -62,8 +61,7 @@ public class CalculatorPage extends BasePage
      *
      * @param ctx The application context
      */
-    public CalculatorPage(Context ctx)
-    {
+    public CalculatorPage(Context ctx) {
         super(ctx);
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
@@ -105,16 +103,17 @@ public class CalculatorPage extends BasePage
         splitSlider.setProgress(calculator.getSplitCount());
 
         root.addView(numPad);
-        calculator.calculate();
 
         double temp = calculator.getBillAmt().doubleValue();
         billAmount.setValue(temp);
 
-        // if settings say leave split on, toggle it on
-        if (app.getSettings().isSplitActive())
+        if (!this.app.getSettings().isSplitActive())
         {
-            toggleSplit();
+            this.splitSliderContainer.setVisibility(View.GONE);
+            this.splitKeyValueText.setVisibility(View.GONE);
         }
+
+        calculator.calculate();
         Clogger.info("Calculator Page loaded successfully");
     }
 
@@ -124,13 +123,12 @@ public class CalculatorPage extends BasePage
      * @return The FrameLayout containing all page content
      */
     @Override
-    public View getView()
-    {
+    public View getView() {
         return root;
     }
 
     /**
-     * Toggles the visibility of the split functionality.
+     * Toggles the visibility of the split functionality with animation.
      * Shows or hides the split slider and split amount result field.
      * Updates the split active state in settings.
      */
@@ -140,14 +138,57 @@ public class CalculatorPage extends BasePage
 
         if (splitSliderContainer.getVisibility() == View.VISIBLE)
         {
-            splitSliderContainer.setVisibility(View.GONE);
-            splitKeyValueText.setVisibility(View.GONE);
+            // Animate out
+            splitSliderContainer.animate()
+                    .alpha(0f)
+                    .scaleY(0.8f)
+                    .setDuration(200)
+                    .setInterpolator(new android.view.animation.AccelerateInterpolator())
+                    .withEndAction(() -> {
+                        splitSliderContainer.setVisibility(View.GONE);
+                        splitSliderContainer.setScaleY(1f);
+                    })
+                    .start();
+
+            splitKeyValueText.animate()
+                    .alpha(0f)
+                    .scaleY(0.8f)
+                    .setDuration(200)
+                    .setInterpolator(new android.view.animation.AccelerateInterpolator())
+                    .withEndAction(() -> {
+                        splitKeyValueText.setVisibility(View.GONE);
+                        splitKeyValueText.setScaleY(1f);
+                    })
+                    .start();
+
             this.app.getSettings().setSplitActive(false);
         }
         else
         {
+            // Set initial state before animating in
+            splitSliderContainer.setAlpha(0f);
+            splitSliderContainer.setScaleY(0.8f);
             splitSliderContainer.setVisibility(View.VISIBLE);
+
+            splitKeyValueText.setAlpha(0f);
+            splitKeyValueText.setScaleY(0.8f);
             splitKeyValueText.setVisibility(View.VISIBLE);
+
+            // Animate in
+            splitSliderContainer.animate()
+                    .alpha(1f)
+                    .scaleY(1f)
+                    .setDuration(200)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                    .start();
+
+            splitKeyValueText.animate()
+                    .alpha(1f)
+                    .scaleY(1f)
+                    .setDuration(200)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                    .start();
+
             this.app.getSettings().setSplitActive(true);
         }
     }
@@ -156,11 +197,12 @@ public class CalculatorPage extends BasePage
      * Creates and configures the split button in the header.
      * When clicked, toggles the split functionality visibility.
      */
-    private void generateSplitBtn()
-    {
+    private void generateSplitBtn() {
         if (header == null) return;
         this.splitBtn = new IconButton(ctx, R.drawable.people);
-        this.splitBtn.setOnClickListener(v -> { toggleSplit(); });
+        this.splitBtn.setOnClickListener(v -> {
+            toggleSplit();
+        });
         header.addIconButton(splitBtn);
     }
 
@@ -168,13 +210,11 @@ public class CalculatorPage extends BasePage
      * Creates and configures the settings button in the header.
      * When clicked, navigates to the settings page.
      */
-    private void generateSettingsBtn()
-    {
+    private void generateSettingsBtn() {
         if (header == null) return;
         this.settingsBtn = new IconButton(ctx, R.drawable.settings);
         this.settingsBtn.setOnClickListener(v -> {
-            if (ctx instanceof MainActivity)
-            {
+            if (ctx instanceof MainActivity) {
                 ((MainActivity) ctx).setPage(new SettingsPage((MainActivity) ctx));
             }
         });
@@ -185,8 +225,7 @@ public class CalculatorPage extends BasePage
      * Creates and configures the bill amount input field.
      * Connects the field to the calculator as an observer.
      */
-    private void generateBillAmountField()
-    {
+    private void generateBillAmountField() {
         this.billAmount = new TextBox(ctx);
         billAmount.addObserver(calculator);
         ElementContainer container = new ElementContainer(ctx, "Bill Amount", billAmount);
@@ -197,11 +236,9 @@ public class CalculatorPage extends BasePage
      * Creates and configures the split slider field.
      * Sets the range from 2 to 10 people and connects to the calculator.
      */
-    private void generateShareField()
-    {
+    private void generateShareField() {
         Slider slider = new Slider(ctx, "split");
         slider.setBounds(2, 10, false);
-
         slider.setProgress(0);
 
         this.splitSlider = slider;
@@ -219,8 +256,7 @@ public class CalculatorPage extends BasePage
      * Sets the range from 0% to 50% and initializes to the default tip percentage
      * from settings.
      */
-    private void generateTipPercentField()
-    {
+    private void generateTipPercentField() {
         Slider slider = new Slider(ctx, "tip");
         slider.setBounds(0, 50, true);
 
