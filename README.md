@@ -19,8 +19,10 @@ If you're interested, you you can download the APK through the [releases](https:
 - **Themes**: Multiple preset themes available
 - **Default Tip Percentage**: Set your preferred default tip
 - **Bill Splitting**: Split the total evenly among up to 10 people
+- **Customizable**: Users can set up the app to their preferences
 - **Ad-Free**: The calculator has 0 ads at all
 - **Offline**: Works completely offline, no internet needed
+- **Customizable**: Users can set up the app to their preferences
 
 ## Future Plans
 - Additional Tip Selection Methods
