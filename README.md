@@ -44,7 +44,6 @@ This project includes portions of open-source color theme palettes:
 | ![](https://www.hunter-baker.com/resources/images/projects/tc4.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc5.jpg) | |
 
 
-
 ## Support
 If you found this project helpful or enjoyable, and want to support future work, you can buy me a coffee on Ko-fi
 <br>
