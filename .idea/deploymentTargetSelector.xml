@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-10T17:21:00.958529519Z">
+        <DropdownSelection timestamp="2026-02-10T17:27:05.022023654Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R5CT33DR35A" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/hutner/.config/.android/avd/Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>
