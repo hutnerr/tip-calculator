@@ -44,6 +44,7 @@ public class SettingsPage extends BasePage
     private final String HELP_URL = "https://www.hunter-baker.com/pages/other/tip-calculator-help.html";
     private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
     private final String KOFI_URL = "https://ko-fi.com/hutner";
+    private final String VERSION = "V1.01";
 
     /**
      * Constructs a new SettingsPage.
@@ -74,6 +75,7 @@ public class SettingsPage extends BasePage
         generateDefaultTipOption();
 
         generateFooterLinks();
+        generateVersion();
 
         Clogger.info("Settings page loaded successfully");
     }
@@ -294,6 +296,27 @@ public class SettingsPage extends BasePage
         layout.addView(container);
     }
 
+    private void generateVersion()
+    {
+        TextView versionText = new TextView(ctx);
+        versionText.setText(VERSION);
+        versionText.setTextSize(12);
+        versionText.setGravity(Gravity.CENTER);
+
+        // Use a muted/secondary color for the version text
+        versionText.setTextColor(0xFF757575); // Gray - adjust to match your theme
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        int bottomMargin = dpToPx(8);
+        params.setMargins(0, 0, 0, bottomMargin);
+        versionText.setLayoutParams(params);
+
+        layout.addView(versionText);
+    }
+
     /**
      * Creates and configures the footer links section.
      * Displays clickable links for GitHub repository, website, and Ko-fi support.
@@ -318,7 +341,7 @@ public class SettingsPage extends BasePage
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         int footerMargin = dpToPx(16);
-        footerParams.setMargins(footerMargin, footerMargin, footerMargin, footerMargin);
+        footerParams.setMargins(footerMargin, footerMargin, footerMargin, 0);
         footerContainer.setLayoutParams(footerParams);
 
         TextView githubLink = createFooterLink("GitHub");
@@ -437,4 +460,6 @@ public class SettingsPage extends BasePage
 
         return formatted.toString();
     }
+
+
 }
