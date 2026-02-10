@@ -1,3 +1,5 @@
+<img src="https://www.hunter-baker.com/resources/images/projects/tc-banner.png">
+
 ## Overview
 A lightweight and Ad-free Android tip calculator built with a focus on flexibility, and everyday usability. 
 
