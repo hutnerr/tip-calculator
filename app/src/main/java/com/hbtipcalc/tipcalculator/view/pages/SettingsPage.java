@@ -302,9 +302,7 @@ public class SettingsPage extends BasePage
         versionText.setText(VERSION);
         versionText.setTextSize(12);
         versionText.setGravity(Gravity.CENTER);
-
-        // Use a muted/secondary color for the version text
-        versionText.setTextColor(0xFF757575); // Gray - adjust to match your theme
+        versionText.setTextColor(this.app.getSettings().getTheme().getTextColor());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
