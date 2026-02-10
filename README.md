@@ -5,6 +5,8 @@ Developed entirely in Java using Android Studio, the app features a fully progra
 
 This project was created as a hands-on way to strengthen Android development skills while building something practical, customizable, and easy to use.
 
+If you're interested, you you can download the APK through the [releases](https://github.com/hutnerr/tip-calculator/releases).
+
 ## Features
 - **Rounding System**: Users can choose how the total after tip is rounded:
   - **Always Down**: rounds down (floor)
@@ -21,13 +23,13 @@ This project was created as a hands-on way to strengthen Android development ski
   - Preset and customizable buttons
   - Typed in directly
   - Carousel
+- Making it more friendly on very small devices
 
-<!--
 ## Links
-- Google Play Store
-- Blog Post
-- Reflection
--->
+- Google Play Store (Awaiting Verfication!)
+- [Help Page](https://www.hunter-baker.com/pages/other/tip-calculator-help.html)
+- [Blog Post](https://www.hunter-baker.com/pages/blog/blog-02-10-2026.html)
+- [Reflection](https://www.hunter-baker.com/pages/projects/tip-calculator.html)
 
 ## License & Credits
 The project is licensed under the MIT License.
