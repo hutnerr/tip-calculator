@@ -1,5 +1,5 @@
 ## Overview
-A lightweight Android tip calculator built with a focus on flexibility, and everyday usability. 
+A lightweight and Ad-free Android tip calculator built with a focus on flexibility, and everyday usability. 
 
 Developed entirely in Java using Android Studio, the app features a fully programmatic UI with no XML layouts, allowing for precise control over layout and behavior.
 
@@ -17,6 +17,8 @@ If you're interested, you you can download the APK through the [releases](https:
 - **Themes**: Multiple preset themes available
 - **Default Tip Percentage**: Set your preferred default tip
 - **Bill Splitting**: Split the total evenly among up to 10 people
+- **Ad-Free**: The calculator has 0 ads at all
+- **Offline**: Works completely offline, no internet needed
 
 ## Future Plans
 - Additional Tip Selection Methods
@@ -39,10 +41,18 @@ This project includes portions of open-source color theme palettes:
 - **[Dracula Theme](https://github.com/dracula/dracula-theme)** by Zeno Rocha and contributors - licensed under the [MIT License](https://github.com/dracula/dracula-theme/blob/master/LICENSE).
 
 ## Screenshots
-| ![](https://www.hunter-baker.com/resources/images/projects/tc1.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc2.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc3.jpg) |
-|---|---|---|
-| ![](https://www.hunter-baker.com/resources/images/projects/tc4.jpg) | ![](https://www.hunter-baker.com/resources/images/projects/tc5.jpg) | |
-
+<table>
+  <tr>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc1.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc2.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc3.jpg?v=2" /></td>
+  </tr>
+  <tr>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc4.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc5.jpg?v=2" /></td>
+    <td></td>
+  </tr>
+</table>
 
 ## Support
 If you found this project helpful or enjoyable, and want to support future work, you can buy me a coffee on Ko-fi
