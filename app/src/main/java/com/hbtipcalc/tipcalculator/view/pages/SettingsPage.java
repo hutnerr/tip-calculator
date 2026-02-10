@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.R;
+import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
@@ -28,15 +31,19 @@ import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
  */
 public class SettingsPage extends BasePage
 {
-    private LinearLayout layout;
+    private CalculatorApp app;
 
+    private LinearLayout layout;
     private Header header;
 
     private IconButton exitBtn;
     private IconButton resetBtn;
     private IconButton helpBtn;
 
-    private final String HELP_URL = "https://hunter-baker.com";
+    private final String MY_WEBSITE_URL = "https://hunter-baker.com";
+    private final String HELP_URL = "https://www.hunter-baker.com/pages/other/tip-calculator-help.html";
+    private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
+    private final String KOFI_URL = "https://ko-fi.com/hutner";
 
     /**
      * Constructs a new SettingsPage.
@@ -48,6 +55,9 @@ public class SettingsPage extends BasePage
     public SettingsPage(Context ctx)
     {
         super(ctx);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        this.app = app;
 
         layout = new LinearLayout(ctx);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -62,6 +72,8 @@ public class SettingsPage extends BasePage
         generateRoundingOption();
         generateCurrencyOption();
         generateDefaultTipOption();
+
+        generateFooterLinks();
 
         Clogger.info("Settings page loaded successfully");
     }
@@ -204,11 +216,8 @@ public class SettingsPage extends BasePage
         String[] currencies = {
                 "$",
                 "€",
+                "¥",
                 "£",
-                "₹",
-                "₣",
-                "R",
-                "kr"
         };
 
         dropDown.setItems(currencies);
@@ -283,6 +292,123 @@ public class SettingsPage extends BasePage
 
         ElementContainer container = new ElementContainer(ctx, "Theme", themeDropDown);
         layout.addView(container);
+    }
+
+    /**
+     * Creates and configures the footer links section.
+     * Displays clickable links for GitHub repository, website, and Ko-fi support.
+     */
+    private void generateFooterLinks()
+    {
+        // spacer to push footer to bottom
+        View flexSpacer = new View(ctx);
+        LinearLayout.LayoutParams flexSpacerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1.0f
+        );
+        flexSpacer.setLayoutParams(flexSpacerParams);
+        layout.addView(flexSpacer);
+
+        LinearLayout footerContainer = new LinearLayout(ctx);
+        footerContainer.setOrientation(LinearLayout.HORIZONTAL);
+        footerContainer.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams footerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        int footerMargin = dpToPx(16);
+        footerParams.setMargins(footerMargin, footerMargin, footerMargin, footerMargin);
+        footerContainer.setLayoutParams(footerParams);
+
+        TextView githubLink = createFooterLink("GitHub");
+        githubLink.setOnClickListener(v -> openUrl(GITHUB_URL));
+        footerContainer.addView(githubLink);
+
+        footerContainer.addView(createSeparator());
+
+        TextView websiteLink = createFooterLink("My Website");
+        websiteLink.setOnClickListener(v -> openUrl(MY_WEBSITE_URL));
+        footerContainer.addView(websiteLink);
+
+        footerContainer.addView(createSeparator());
+
+        TextView kofiLink = createFooterLink("Support Me");
+        kofiLink.setOnClickListener(v -> openUrl(KOFI_URL));
+        footerContainer.addView(kofiLink);
+
+        layout.addView(footerContainer);
+    }
+
+    /**
+     * Creates a styled TextView for footer links.
+     *
+     * @param text The link text to display
+     * @return Configured TextView for the footer link
+     */
+    private TextView createFooterLink(String text)
+    {
+        TextView link = new TextView(ctx);
+        link.setText(text);
+        link.setTextSize(14);
+        link.setTextColor(this.app.getCTheme().getAccentColor());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        link.setLayoutParams(params);
+
+        // Add some padding for easier tapping
+        int padding = dpToPx(8);
+        link.setPadding(padding, padding, padding, padding);
+
+        return link;
+    }
+
+    /**
+     * Creates a separator TextView (pipe character) between footer links.
+     *
+     * @return TextView configured as a separator
+     */
+    private TextView createSeparator()
+    {
+        TextView separator = new TextView(ctx);
+        separator.setText(" | ");
+        separator.setTextSize(14);
+        separator.setTextColor(this.app.getCTheme().getTextColor());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        separator.setLayoutParams(params);
+
+        return separator;
+    }
+
+    /**
+     * Opens a URL in the default browser.
+     *
+     * @param url The URL to open
+     */
+    private void openUrl(String url)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        ctx.startActivity(intent);
+    }
+
+    /**
+     * Converts density-independent pixels to actual pixels.
+     *
+     * @param dp The dp value to convert
+     * @return The pixel value
+     */
+    private int dpToPx(int dp)
+    {
+        float density = ctx.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     /**
