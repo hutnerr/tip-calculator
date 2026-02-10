@@ -48,7 +48,7 @@ This project includes portions of open-source color theme palettes:
 <table>
   <tr>
     <td><img src="https://www.hunter-baker.com/resources/images/projects/tc1.jpg?v=2" /></td>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc2.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc2.jpg?v=3" /></td>
     <td><img src="https://www.hunter-baker.com/resources/images/projects/tc3.jpg?v=2" /></td>
   </tr>
   <tr>
