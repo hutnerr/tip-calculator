@@ -29,7 +29,6 @@ public class CalculatorApp extends Application
         this.ctheme = settings.getTheme();
         this.calculator = new Calculator(new BigDecimal("0.00"), settings.getTipPercentage(), settings.getRoundFlag());
 
-
         Clogger.info("CalculatorApp Initialized");
     }
 

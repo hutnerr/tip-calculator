@@ -143,6 +143,7 @@ public class SettingsPage extends BasePage
                     .setPositiveButton("Yes", (dialog, which) -> {
                         Settings.getInstance().reset();
                         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+                        app.getCalculator().setRoundingFlag(Settings.getInstance().getRoundFlag());
                         app.setCTheme(Settings.getInstance().getTheme());
                         if (ctx instanceof android.app.Activity)
                         {

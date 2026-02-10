@@ -139,9 +139,9 @@ public class Calculator implements SliderObserver, TextBoxObserver {
     {
         return this.billAmt;
     }
-
     public int getSplitCount()
     {
         return this.splitCount;
     }
+    public int getTipPercent() { return this.tipPercent; }
 }

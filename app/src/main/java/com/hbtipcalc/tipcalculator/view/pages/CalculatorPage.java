@@ -256,7 +256,8 @@ public class CalculatorPage extends BasePage {
      * Sets the range from 0% to 50% and initializes to the default tip percentage
      * from settings.
      */
-    private void generateTipPercentField() {
+    private void generateTipPercentField()
+    {
         Slider slider = new Slider(ctx, "tip");
         slider.setBounds(0, 50, true);
 
@@ -265,7 +266,8 @@ public class CalculatorPage extends BasePage {
 
         slider.addObserver(container);
         slider.addObserver(this.calculator);
-        int defaultTipPc = Settings.getInstance().getTipPercentage();
+//        int defaultTipPc = Settings.getInstance().getTipPercentage();
+        int defaultTipPc = this.calculator.getTipPercent();
         slider.setProgress(defaultTipPc);
         container.setValue(defaultTipPc + "%");
     }
