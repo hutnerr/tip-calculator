@@ -21,6 +21,7 @@ If you're interested, you you can download the APK through the [releases](https:
 - **Bill Splitting**: Split the total evenly among up to 10 people
 - **Customizable**: Users can set up the app to their preferences
 - **Ad-Free**: The calculator has 0 ads at all
+- **Numpad**: Can choose between a standard or inverted numpad
 - **Offline**: Works completely offline, no internet needed
 - **Customizable**: Users can set up the app to their preferences
 
