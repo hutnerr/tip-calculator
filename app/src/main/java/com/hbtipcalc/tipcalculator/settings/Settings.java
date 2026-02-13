@@ -22,12 +22,14 @@ public class Settings
     private static final String DEFAULT_CURRENCY = "$"; // USD
     private static final CTheme DEFAULT_THEME = CTheme.GRUVBOX; // Gruvbox
     private static final boolean DEFAULT_SPLIT_ACTIVE = false; // split must be toggled first
+    private static final boolean DEFAULT_NUMPAD_STATE = false; // by default the numpad is not inverted
 
     private int tipPercentage;
     private RoundingFlag roundFlag;
     private String currency;
     private CTheme theme;
     private boolean splitActive;
+    private boolean invertedNumpad;
 
     private static Settings instance; // singleton
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -73,6 +75,16 @@ public class Settings
                     this.splitActive = DEFAULT_SPLIT_ACTIVE;
                 }
 
+                Integer numpadInverted = prefs.get(SettingsKeys.NUMPAD_INVERTED);
+                if (numpadInverted == null) this.invertedNumpad = DEFAULT_NUMPAD_STATE;
+                else if (numpadInverted == 0) this.invertedNumpad = false;
+                else if (numpadInverted == 1) this.invertedNumpad = true;
+                else
+                {
+                    Clogger.warn("Numpad Inverted was an int not 0 or 1");
+                    this.invertedNumpad = DEFAULT_NUMPAD_STATE;
+                }
+
             }).get(); // wait for completion
             Clogger.info("Settings successfully loaded");
         }
@@ -83,6 +95,7 @@ public class Settings
             this.roundFlag = DEFAULT_ROUND_FLAG;
             this.currency = DEFAULT_CURRENCY;
             this.splitActive = DEFAULT_SPLIT_ACTIVE;
+            this.invertedNumpad = DEFAULT_NUMPAD_STATE;
         }
     }
 
@@ -93,6 +106,7 @@ public class Settings
         setCurrency(DEFAULT_CURRENCY);
         setTheme(DEFAULT_THEME);
         setSplitActive(DEFAULT_SPLIT_ACTIVE);
+        setNumpadInverted(DEFAULT_NUMPAD_STATE);
         Clogger.info("Settings have been reset");
     }
 
@@ -102,6 +116,7 @@ public class Settings
     public String getCurrency() { return currency; }
     public CTheme getTheme() { return theme; }
     public boolean isSplitActive() { return splitActive; }
+    public boolean isNumpadInverted() { return this.invertedNumpad; }
 
     // SETTER METHODS
     public void setTipPercentage(int percentage)
@@ -134,6 +149,13 @@ public class Settings
         this.splitActive = status;
         int i = status ? 1 : 0; // convert to int
         saveValue(SettingsKeys.SPLIT_ACTIVE, i);
+    }
+
+    public void setNumpadInverted(boolean status)
+    {
+        this.invertedNumpad = status;
+        int i = status ? 1 : 0; // convert to int
+        saveValue(SettingsKeys.NUMPAD_INVERTED, i);
     }
 
     private <T> void saveValue(Preferences.Key<T> key, T value)

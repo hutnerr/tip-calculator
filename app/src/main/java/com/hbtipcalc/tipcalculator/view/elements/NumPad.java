@@ -25,6 +25,11 @@ public class NumPad extends GridLayout
 
     public NumPad(Context ctx)
     {
+        this(ctx, false);
+    }
+
+    public NumPad(Context ctx, boolean inverted)
+    {
         super(ctx);
         setColumnCount(3);
         setRowCount(4);
@@ -34,12 +39,25 @@ public class NumPad extends GridLayout
 
         this.observers = new ArrayList<>();
 
-        String[] keys = {
-                "1", "2", "3",
-                "4", "5", "6",
-                "7", "8", "9",
-                "C", "0", "⌫"
-        };
+        String[] keys;
+        if (inverted)
+        {
+            keys = new String[] {
+                    "1", "2", "3",
+                    "4", "5", "6",
+                    "7", "8", "9",
+                    "C", "0", "⌫"
+            };
+        }
+        else
+        {
+            keys = new String[] {
+                    "7", "8", "9",
+                    "4", "5", "6",
+                    "1", "2", "3",
+                    "C", "0", "⌫"
+            };
+        }
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.t = app.getCTheme();

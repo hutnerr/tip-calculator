@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.R;
-import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
@@ -44,7 +43,7 @@ public class SettingsPage extends BasePage
     private final String HELP_URL = "https://www.hunter-baker.com/pages/other/tip-calculator-help.html";
     private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
     private final String KOFI_URL = "https://ko-fi.com/hutner";
-    private final String VERSION = "V1.01";
+    private final String VERSION = "V1.02";
 
     /**
      * Constructs a new SettingsPage.
@@ -72,7 +71,9 @@ public class SettingsPage extends BasePage
         generateThemeOption();
         generateRoundingOption();
         generateCurrencyOption();
+        generateNumpadOrientationOption();
         generateDefaultTipOption();
+
 
         generateFooterLinks();
         generateVersion();
@@ -176,6 +177,30 @@ public class SettingsPage extends BasePage
         slider.addObserver((value, id) -> Settings.getInstance().setTipPercentage(value));
 
         container.setValue(defaultTipPc + "%");
+    }
+
+    /**
+     * Creates and configures the numpad orientation option.
+     * Allows users to select between standard (123 on top) or inverted (789 on top) numpad layout.
+     * Updates are saved to settings immediately.
+     */
+    private void generateNumpadOrientationOption()
+    {
+        DropDown dropDown = new DropDown(ctx);
+
+        String[] options = {"Standard", "Inverted"};
+        dropDown.setItems(options);
+
+        boolean isInverted = Settings.getInstance().isNumpadInverted();
+        dropDown.setSelection(isInverted ? 1 : 0);
+
+        dropDown.addObserver((position, value) -> {
+            boolean inverted = (position == 1);
+            Settings.getInstance().setNumpadInverted(inverted);
+        });
+
+        ElementContainer container = new ElementContainer(ctx, "Numpad Layout", dropDown);
+        layout.addView(container);
     }
 
     /**
@@ -459,6 +484,4 @@ public class SettingsPage extends BasePage
 
         return formatted.toString();
     }
-
-
 }

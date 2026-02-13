@@ -13,4 +13,5 @@ public class SettingsKeys
     public static final Preferences.Key<String> CURRENCY = PreferencesKeys.stringKey("currency"); // the currency symbol
     public static final Preferences.Key<Integer> THEME = PreferencesKeys.intKey("theme"); // the CTheme
     public static final Preferences.Key<Integer> SPLIT_ACTIVE = PreferencesKeys.intKey("split_active"); // 0 for inactive, 1 for active
+    public static final Preferences.Key<Integer> NUMPAD_INVERTED = PreferencesKeys.intKey("numpad_inverted"); // 0 for inactive, 1 for active
 }

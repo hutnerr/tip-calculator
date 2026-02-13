@@ -90,7 +90,7 @@ public class CalculatorPage extends BasePage {
 
         root.addView(layout);
 
-        NumPad numPad = new NumPad(ctx);
+        NumPad numPad = new NumPad(ctx, this.app.getSettings().isNumpadInverted());
         FrameLayout.LayoutParams numPadParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
