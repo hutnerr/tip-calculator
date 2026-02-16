@@ -35,8 +35,7 @@ If you're interested, you you can download the APK through the [releases](https:
 ## Links
 - Google Play Store (Awaiting Verfication!)
 - [Help Page](https://www.hunter-baker.com/pages/other/tip-calculator-help.html)
-- [Blog Post](https://www.hunter-baker.com/pages/blog/blog-02-10-2026.html)
-- [Reflection](https://www.hunter-baker.com/pages/projects/tip-calculator.html)
+- [Showcase](https://www.hunter-baker.com/pages/projects/tip-calculator.html)
 
 ## License & Credits
 The project is licensed under the MIT License.
