@@ -125,13 +125,14 @@ public class Calculator implements SliderObserver, TextBoxObserver {
         String cleaned = CURRENCY_PREFIX
                 .matcher(newText)
                 .replaceFirst("")
-                .replace(",", "")
+                .replace(",", ".")  // convert comma to period for European locales
                 .trim();
 
         try {
             this.billAmt = new BigDecimal(cleaned);
             calculate();
-        } catch (NumberFormatException e) {
+        }
+            catch (NumberFormatException e) {
         }
     }
 

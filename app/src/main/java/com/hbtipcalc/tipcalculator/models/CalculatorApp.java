@@ -38,5 +38,9 @@ public class CalculatorApp extends Application
     public Calculator getCalculator() { return this.calculator; }
 
     // setter methods
-    public void setCTheme(CTheme t) { this.ctheme = t; }
+    public void setCTheme(CTheme t)
+    {
+        this.ctheme = t;
+
+    }
 }

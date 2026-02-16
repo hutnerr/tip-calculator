@@ -84,4 +84,7 @@ public enum CTheme
     public float getTileFontSize() { return TITLE_FS; }
     public float getTextFontSize() { return TEXT_FS; }
     public float getNumPadBtnFontSize() { return NUM_PAD_BTN_FS; }
+
+    // setter
+
 }

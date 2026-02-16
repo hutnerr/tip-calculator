@@ -44,11 +44,15 @@ public class Header extends LinearLayout {
         CTheme t = app.getCTheme();
 
         setOrientation(HORIZONTAL);
-        setLayoutParams(new LayoutParams(
+        LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        setPadding(20, 20, 20, 20);
+        );
+
+        params.setMargins(0, 0, 0, 16); // left, top, right, bottom
+        setLayoutParams(params);
+
+        setPadding(20, 5, 20, 5);
         setBackgroundColor(t.getAccentColor());
         setGravity(Gravity.CENTER_VERTICAL); // centered within the container
 

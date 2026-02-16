@@ -43,7 +43,7 @@ public class SettingsPage extends BasePage
     private final String HELP_URL = "https://www.hunter-baker.com/pages/other/tip-calculator-help.html";
     private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
     private final String KOFI_URL = "https://ko-fi.com/hutner";
-    private final String VERSION = "V1.02";
+    private final String VERSION = "V1.03";
 
     /**
      * Constructs a new SettingsPage.

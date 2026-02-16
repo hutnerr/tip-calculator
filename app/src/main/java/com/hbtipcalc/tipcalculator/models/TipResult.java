@@ -1,6 +1,7 @@
 package com.hbtipcalc.tipcalculator.models;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * Contains the result of a Tip Calculation.
@@ -44,7 +45,8 @@ public class TipResult
     // Getters for formatted versions of instance variables
     private String formatBD(BigDecimal val)
     {
-        return String.format("%s%.2f", currencySymbol, val);
+        DecimalFormat formatter = new DecimalFormat(currencySymbol + "0.00");
+        return formatter.format(val);
     }
     public String getFormattedTip() { return formatBD(tip); }
     public String getFormattedSplit()

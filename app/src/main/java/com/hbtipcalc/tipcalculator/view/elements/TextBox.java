@@ -67,7 +67,7 @@ public class TextBox extends androidx.appcompat.widget.AppCompatTextView impleme
         String digits = String.valueOf(cents);
         if (digits.length() >= MAX_DIGITS)
         {
-            setTextColor(Color.RED);
+            setTextColor(this.t.getAccentColor());
             postDelayed(() -> setTextColor(t.getTextColor()), 400);
             return;
         }

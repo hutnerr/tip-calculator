@@ -12,10 +12,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.util.Clogger;
 import com.hbtipcalc.tipcalculator.view.pages.BasePage;
 import com.hbtipcalc.tipcalculator.view.pages.CalculatorPage;
 import com.hbtipcalc.tipcalculator.view.pages.SettingsPage;
+
+import java.util.Locale;
+import android.content.Context;
+import android.content.res.Configuration;
+
 
 /**
  * This is the entry point of the app.
@@ -44,8 +51,8 @@ public class MainActivity extends AppCompatActivity
         rootLayout.setBackgroundColor(((CalculatorApp) getApplication()).getCTheme().getBackgroundColor());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // vertical only
         setContentView(rootLayout);
-
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        applyThemeToSystemBars();
 
         ViewCompat.setOnApplyWindowInsetsListener(rootLayout, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -65,7 +72,6 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putString(KEY_CURRENT_PAGE, currentPage);
     }
-
 
     public void setPage(BasePage page)
     {
@@ -115,6 +121,46 @@ public class MainActivity extends AppCompatActivity
                     })
                     .start();
         }
+    }
+
+    private void applyThemeToSystemBars()
+    {
+        CalculatorApp app = (CalculatorApp) getApplication();
+        CTheme theme = app.getCTheme();
+
+        int accentColor = theme.getAccentColor();
+        int backgroundColor = theme.getBackgroundColor();
+
+        // Ensure we control system bars
+        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            getWindow().setStatusBarContrastEnforced(false);
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
+
+        getWindow().setStatusBarColor(accentColor);
+        getWindow().setNavigationBarColor(backgroundColor);
+
+        androidx.core.view.WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+
+        if (controller != null)
+        {
+            controller.setAppearanceLightStatusBars(isColorLight(accentColor));
+            controller.setAppearanceLightNavigationBars(isColorLight(backgroundColor));
+        }
+    }
+
+
+
+    private boolean isColorLight(int color)
+    {
+        double darkness = 1 - (0.299 * android.graphics.Color.red(color)
+                + 0.587 * android.graphics.Color.green(color)
+                + 0.114 * android.graphics.Color.blue(color)) / 255;
+        return darkness < 0.5;
     }
 
     /**
