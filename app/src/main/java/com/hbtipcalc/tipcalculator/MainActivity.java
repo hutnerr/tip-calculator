@@ -131,15 +131,16 @@ public class MainActivity extends AppCompatActivity
         int accentColor = theme.getAccentColor();
         int backgroundColor = theme.getBackgroundColor();
 
-        // Ensure we control system bars
-        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // Required on modern Android when using edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
+        // Allow custom system bar colors
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             getWindow().setStatusBarContrastEnforced(false);
             getWindow().setNavigationBarContrastEnforced(false);
         }
 
+        // Set actual colors
         getWindow().setStatusBarColor(accentColor);
         getWindow().setNavigationBarColor(backgroundColor);
 
@@ -148,11 +149,11 @@ public class MainActivity extends AppCompatActivity
 
         if (controller != null)
         {
-            controller.setAppearanceLightStatusBars(isColorLight(accentColor));
+            // Status bar icons should contrast with background (due to edge-to-edge layout)
+            controller.setAppearanceLightStatusBars(isColorLight(backgroundColor));
             controller.setAppearanceLightNavigationBars(isColorLight(backgroundColor));
         }
     }
-
 
 
     private boolean isColorLight(int color)
