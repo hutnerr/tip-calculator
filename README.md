@@ -18,7 +18,7 @@ If you're interested, you you can download the APK through the [releases](https:
 - **Currency Support**: Includes a few popular currencies
 - **Themes**: Multiple preset themes available
 - **Default Tip Percentage**: Set your preferred default tip
-- **Bill Splitting**: Split the total evenly among up to 10 people
+- **Bill Splitting**: Split the total evenly among up to 99 people
 - **Customizable**: Users can set up the app to their preferences
 - **Ad-Free**: The calculator has 0 ads at all
 - **Numpad**: Can choose between a standard or inverted numpad
@@ -30,7 +30,8 @@ If you're interested, you you can download the APK through the [releases](https:
   - Preset and customizable buttons
   - Typed in directly
   - Carousel
-- Making it more friendly on very small devices
+- Making it more friendly on very small and very large devices
+- Additional themes
 
 ## Links
 - Google Play Store (Awaiting Verfication!)
@@ -47,13 +48,13 @@ This project includes portions of open-source color theme palettes:
 ## Screenshots
 <table>
   <tr>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc1.jpg?v=2" /></td>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc2.jpg?v=3" /></td>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc3.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc1.jpg?v=4" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc2.jpg?v=4" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc3.jpg?v=4" /></td>
   </tr>
   <tr>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc4.jpg?v=2" /></td>
-    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc5.jpg?v=2" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc4.jpg?v=4" /></td>
+    <td><img src="https://www.hunter-baker.com/resources/images/projects/tc5.jpg?v=4" /></td>
     <td></td>
   </tr>
 </table>
