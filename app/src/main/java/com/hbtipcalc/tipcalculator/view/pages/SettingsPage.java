@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
 import com.hbtipcalc.tipcalculator.R;
+import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
@@ -39,11 +40,12 @@ public class SettingsPage extends BasePage
     private IconButton resetBtn;
     private IconButton helpBtn;
 
-    private final String MY_WEBSITE_URL = "https://hunter-baker.com";
+    private final String MY_WEBSITE_URL_CONTACT = "https://www.hunter-baker.com/pages/nav/contact.html";
     private final String HELP_URL = "https://www.hunter-baker.com/pages/other/tip-calculator-help.html";
     private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
     private final String KOFI_URL = "https://ko-fi.com/hutner";
-    private final String VERSION = "V1.03";
+    private final String PRIVACY_POLICY = "https://www.hunter-baker.com/pages/other/tip-calculator-privacy-policy.html";
+    private final String VERSION = "V1.04";
 
     /**
      * Constructs a new SettingsPage.
@@ -63,7 +65,7 @@ public class SettingsPage extends BasePage
         layout.setOrientation(LinearLayout.VERTICAL);
 
         this.header = new Header(ctx, "Settings");
-        generateHelpBtn();
+//        generateHelpBtn();
         generateResetBtn();
         generateExitBtn();
         layout.addView(header);
@@ -73,7 +75,7 @@ public class SettingsPage extends BasePage
         generateCurrencyOption();
         generateNumpadOrientationOption();
         generateDefaultTipOption();
-
+        generateMaxSplitOption();
 
         generateFooterLinks();
         generateVersion();
@@ -113,17 +115,17 @@ public class SettingsPage extends BasePage
      * Creates and configures the help button in the header.
      * Currently unused but reserved for future help functionality.
      */
-    private void generateHelpBtn()
-    {
-        if (header == null) return;
-        this.helpBtn = new IconButton(ctx, R.drawable.help);
-        this.helpBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(HELP_URL));
-            ctx.startActivity(intent);
-        });
-        header.addIconButton(helpBtn);
-    }
+//    private void generateHelpBtn()
+//    {
+//        if (header == null) return;
+//        this.helpBtn = new IconButton(ctx, R.drawable.help);
+//        this.helpBtn.setOnClickListener(v -> {
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setData(Uri.parse(HELP_URL));
+//            ctx.startActivity(intent);
+//        });
+//        header.addIconButton(helpBtn);
+//    }
 
     /**
      * Creates and configures the reset button in the header.
@@ -177,6 +179,22 @@ public class SettingsPage extends BasePage
         slider.addObserver((value, id) -> Settings.getInstance().setTipPercentage(value));
 
         container.setValue(defaultTipPc + "%");
+    }
+
+    private void generateMaxSplitOption()
+    {
+        Slider slider = new Slider(ctx, "maxsplit");
+        slider.setBounds(3, 99, true);
+
+        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Max Split", slider, " People");
+        layout.addView(container);
+
+        int maxSplit = Settings.getInstance().getMaxSplit();
+        slider.setProgress(maxSplit);
+        slider.addObserver(container);
+        slider.addObserver((value, id) -> Settings.getInstance().setMaxSplit(value));
+
+        container.setValue(String.format("%d People", maxSplit));
     }
 
     /**
@@ -241,16 +259,25 @@ public class SettingsPage extends BasePage
     {
         DropDown dropDown = new DropDown(ctx);
 
+        // FIXME: ensure that if I change this, i have to update
+        // my currencyPrefix that exists within the Calculator
+
         String[] currencies = {
                 "$",
-                "€",
-                "¥",
                 "£",
+                "€",
+                "₹",
+                "₱",
+                "฿",
+                "None"
         };
 
         dropDown.setItems(currencies);
 
         String currentCurrency = Settings.getInstance().getCurrency();
+
+        if (currentCurrency.equals("")) currentCurrency = "None";
+
         for (int i = 0; i < currencies.length; i++)
         {
             if (currencies[i].startsWith(currentCurrency))
@@ -261,7 +288,8 @@ public class SettingsPage extends BasePage
         }
 
         dropDown.addObserver((position, value) -> {
-            Settings.getInstance().setCurrency(value);
+            if (value.equals("None")) Settings.getInstance().setCurrency("");
+            else Settings.getInstance().setCurrency(value);
         });
 
         ElementContainer container = new ElementContainer(ctx, "Currency Symbol", dropDown);
@@ -334,17 +362,13 @@ public class SettingsPage extends BasePage
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        int bottomMargin = dpToPx(8);
-        params.setMargins(0, 0, 0, bottomMargin);
+        int margin = dpToPx(8);
+        params.setMargins(0, margin, 0, margin);
         versionText.setLayoutParams(params);
 
         layout.addView(versionText);
     }
 
-    /**
-     * Creates and configures the footer links section.
-     * Displays clickable links for GitHub repository, website, and Ko-fi support.
-     */
     private void generateFooterLinks()
     {
         // spacer to push footer to bottom
@@ -357,34 +381,66 @@ public class SettingsPage extends BasePage
         flexSpacer.setLayoutParams(flexSpacerParams);
         layout.addView(flexSpacer);
 
-        LinearLayout footerContainer = new LinearLayout(ctx);
-        footerContainer.setOrientation(LinearLayout.HORIZONTAL);
-        footerContainer.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams footerParams = new LinearLayout.LayoutParams(
+        int horizontalMargin = dpToPx(16);
+        int smallSpacing = dpToPx(4);
+
+        // -----------------------
+        // TOP ROW
+        // -----------------------
+        LinearLayout topFooterRow = new LinearLayout(ctx);
+        topFooterRow.setOrientation(LinearLayout.HORIZONTAL);
+        topFooterRow.setGravity(Gravity.CENTER);
+
+        LinearLayout.LayoutParams topParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        int footerMargin = dpToPx(16);
-        footerParams.setMargins(footerMargin, footerMargin, footerMargin, 0);
-        footerContainer.setLayoutParams(footerParams);
+        topParams.setMargins(horizontalMargin, 0, horizontalMargin, 0);
+        topFooterRow.setLayoutParams(topParams);
+
+        TextView helpLink = createFooterLink("Help");
+        helpLink.setOnClickListener(v -> openUrl(HELP_URL));
+        topFooterRow.addView(helpLink);
+
+        topFooterRow.addView(createSeparator());
+
+        TextView reportLink = createFooterLink("Report");
+        reportLink.setOnClickListener(v -> openUrl(MY_WEBSITE_URL_CONTACT));
+        topFooterRow.addView(reportLink);
+
+        topFooterRow.addView(createSeparator());
+
+        TextView privacy = createFooterLink("Privacy");
+        privacy.setOnClickListener(v -> openUrl(PRIVACY_POLICY));
+        topFooterRow.addView(privacy);
+
+        layout.addView(topFooterRow);
+
+        // -----------------------
+        // BOTTOM ROW
+        // -----------------------
+        LinearLayout bottomFooterRow = new LinearLayout(ctx);
+        bottomFooterRow.setOrientation(LinearLayout.HORIZONTAL);
+        bottomFooterRow.setGravity(Gravity.CENTER);
+
+        LinearLayout.LayoutParams bottomParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        bottomParams.setMargins(horizontalMargin, smallSpacing, horizontalMargin, 0);
+        bottomFooterRow.setLayoutParams(bottomParams);
 
         TextView githubLink = createFooterLink("GitHub");
         githubLink.setOnClickListener(v -> openUrl(GITHUB_URL));
-        footerContainer.addView(githubLink);
+        bottomFooterRow.addView(githubLink);
 
-        footerContainer.addView(createSeparator());
-
-        TextView websiteLink = createFooterLink("My Website");
-        websiteLink.setOnClickListener(v -> openUrl(MY_WEBSITE_URL));
-        footerContainer.addView(websiteLink);
-
-        footerContainer.addView(createSeparator());
+        bottomFooterRow.addView(createSeparator());
 
         TextView kofiLink = createFooterLink("Support Me");
         kofiLink.setOnClickListener(v -> openUrl(KOFI_URL));
-        footerContainer.addView(kofiLink);
+        bottomFooterRow.addView(kofiLink);
 
-        layout.addView(footerContainer);
+        layout.addView(bottomFooterRow);
     }
 
     /**
@@ -408,7 +464,7 @@ public class SettingsPage extends BasePage
 
         // Add some padding for easier tapping
         int padding = dpToPx(8);
-        link.setPadding(padding, padding, padding, padding);
+        link.setPadding(padding, 0, padding, 0);
 
         return link;
     }

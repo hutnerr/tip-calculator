@@ -238,7 +238,7 @@ public class CalculatorPage extends BasePage {
      */
     private void generateShareField() {
         Slider slider = new Slider(ctx, "split");
-        slider.setBounds(2, 10, false);
+        slider.setBounds(2, this.app.getSettings().getMaxSplit(), false);
         slider.setProgress(0);
 
         this.splitSlider = slider;

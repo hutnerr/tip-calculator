@@ -17,8 +17,7 @@ import java.util.regex.Pattern;
  */
 public class Calculator implements SliderObserver, TextBoxObserver {
     private static final String[] CURRENCIES = { "$", "€", "£", "₹", "₣", "R", "kr" };
-    private static final Pattern CURRENCY_PREFIX = Pattern.compile("^\\s*(?:\\$|€|£|₹|₣|R|kr)\\s*");
-
+    private static final Pattern CURRENCY_PREFIX = Pattern.compile("^\\s*(?:\\$|€|£|₹|₱|฿|د\\.إ|₣|R|kr)\\s*");
     private final List<CalculatorObserver> observers;
 
     private BigDecimal billAmt;

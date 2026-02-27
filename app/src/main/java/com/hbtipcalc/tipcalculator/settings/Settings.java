@@ -23,6 +23,7 @@ public class Settings
     private static final CTheme DEFAULT_THEME = CTheme.GRUVBOX; // Gruvbox
     private static final boolean DEFAULT_SPLIT_ACTIVE = false; // split must be toggled first
     private static final boolean DEFAULT_NUMPAD_STATE = false; // by default the numpad is not inverted
+    private static final int DEFAULT_MAX_SPLIT = 10; // 10 people
 
     private int tipPercentage;
     private RoundingFlag roundFlag;
@@ -30,6 +31,7 @@ public class Settings
     private CTheme theme;
     private boolean splitActive;
     private boolean invertedNumpad;
+    private int maxSplit;
 
     private static Settings instance; // singleton
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -85,6 +87,9 @@ public class Settings
                     this.invertedNumpad = DEFAULT_NUMPAD_STATE;
                 }
 
+                Integer maxSplitSetting = prefs.get(SettingsKeys.SPLIT_MAX);
+                this.maxSplit = maxSplitSetting != null ? maxSplitSetting : DEFAULT_MAX_SPLIT;
+
             }).get(); // wait for completion
             Clogger.info("Settings successfully loaded");
         }
@@ -96,6 +101,7 @@ public class Settings
             this.currency = DEFAULT_CURRENCY;
             this.splitActive = DEFAULT_SPLIT_ACTIVE;
             this.invertedNumpad = DEFAULT_NUMPAD_STATE;
+            this.maxSplit = DEFAULT_MAX_SPLIT;
         }
     }
 
@@ -107,6 +113,7 @@ public class Settings
         setTheme(DEFAULT_THEME);
         setSplitActive(DEFAULT_SPLIT_ACTIVE);
         setNumpadInverted(DEFAULT_NUMPAD_STATE);
+        setMaxSplit(DEFAULT_MAX_SPLIT);
         Clogger.info("Settings have been reset");
     }
 
@@ -117,6 +124,7 @@ public class Settings
     public CTheme getTheme() { return theme; }
     public boolean isSplitActive() { return splitActive; }
     public boolean isNumpadInverted() { return this.invertedNumpad; }
+    public int getMaxSplit() { return this.maxSplit; }
 
     // SETTER METHODS
     public void setTipPercentage(int percentage)
@@ -156,6 +164,12 @@ public class Settings
         this.invertedNumpad = status;
         int i = status ? 1 : 0; // convert to int
         saveValue(SettingsKeys.NUMPAD_INVERTED, i);
+    }
+
+    public void setMaxSplit(int splitmax)
+    {
+        this.maxSplit = splitmax;
+        saveValue(SettingsKeys.SPLIT_MAX, splitmax);
     }
 
     private <T> void saveValue(Preferences.Key<T> key, T value)
