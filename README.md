@@ -7,7 +7,7 @@ Developed entirely in Java using Android Studio, the app features a fully progra
 
 This project was created as a hands-on way to strengthen Android development skills while building something practical, customizable, and easy to use.
 
-If you're interested, you you can download the APK through the [releases](https://github.com/hutnerr/tip-calculator/releases).
+If you're interested, you can find it on the [Play Store](https://play.google.com/store/apps/details?id=com.hbtipcalc.tipcalculator) or you can download the APK through the [releases](https://github.com/hutnerr/tip-calculator/releases).
 
 ## Features
 - **Rounding System**: Users can choose how the total after tip is rounded:
@@ -34,7 +34,7 @@ If you're interested, you you can download the APK through the [releases](https:
 - Additional themes
 
 ## Links
-- Google Play Store (Awaiting Verfication!)
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.hbtipcalc.tipcalculator)
 - [Help Page](https://www.hunter-baker.com/pages/other/tip-calculator-help.html)
 - [Showcase](https://www.hunter-baker.com/pages/projects/tip-calculator.html)
 
