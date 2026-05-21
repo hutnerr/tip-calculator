@@ -81,40 +81,29 @@ public class MainActivity extends AppCompatActivity
         View newView = page.getView();
         View oldView = rootLayout.getChildAt(0);
 
-        // determine animation direction
         boolean slideFromRight = page instanceof SettingsPage;
+        int slide = getResources().getDisplayMetrics().widthPixels;
 
-        // set initial position for new view
-        newView.setTranslationX(slideFromRight ? rootLayout.getWidth() : -rootLayout.getWidth());
-        newView.setAlpha(0f);
+        newView.setTranslationX(slideFromRight ? slide : -slide);
 
-        // enable hardware layers for smoother rendering
         newView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        if (oldView != null)
-        {
-            oldView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        }
+        if (oldView != null) oldView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
-        // add new view
         rootLayout.addView(newView);
 
-        // animate new view in
         newView.animate()
                 .translationX(0)
-                .alpha(1f)
                 .setDuration(300)
                 .setInterpolator(new android.view.animation.DecelerateInterpolator())
                 .withEndAction(() -> newView.setLayerType(View.LAYER_TYPE_NONE, null))
                 .start();
 
-        // animate old view out
         if (oldView != null)
         {
             oldView.animate()
-                    .translationX(slideFromRight ? -rootLayout.getWidth() : rootLayout.getWidth())
-                    .alpha(1f)
-                    .setDuration(200)
-                    .setInterpolator(new android.view.animation.AccelerateInterpolator())
+                    .translationX(slideFromRight ? -slide : slide)
+                    .setDuration(300)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
                     .withEndAction(() -> {
                         oldView.setLayerType(View.LAYER_TYPE_NONE, null);
                         rootLayout.removeView(oldView);

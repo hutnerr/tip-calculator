@@ -36,7 +36,7 @@ public class Settings
     private int maxSplit;
     private TipInputType tipInputType;
 
-    private static Settings instance; // singleton
+    private static volatile Settings instance; // singleton
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private Settings() { }
@@ -68,7 +68,9 @@ public class Settings
                 TipResult.setCurrencySymbol(this.currency);
 
                 Integer themeId = prefs.get(SettingsKeys.THEME);
-                this.theme = themeId != null ? CTheme.values()[themeId] : DEFAULT_THEME;
+                CTheme[] themes = CTheme.values();
+                this.theme = (themeId != null && themeId >= 0 && themeId < themes.length)
+                        ? themes[themeId] : DEFAULT_THEME;
 
                 Integer intSplitActive = prefs.get(SettingsKeys.SPLIT_ACTIVE);
                 if (intSplitActive == null) this.splitActive = DEFAULT_SPLIT_ACTIVE;

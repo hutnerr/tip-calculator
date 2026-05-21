@@ -4,8 +4,8 @@ import android.util.Log;
 
 public class Clogger
 {
-    public static boolean debugEnabled = true;
-    public static boolean disabled = false;
+    public static boolean debugEnabled = false;
+    public static boolean disabled = true;
 
     private static final String TAG = "Clogger";
 

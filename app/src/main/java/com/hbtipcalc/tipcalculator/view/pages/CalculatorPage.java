@@ -1,5 +1,8 @@
 package com.hbtipcalc.tipcalculator.view.pages;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.InputType;
@@ -147,59 +150,65 @@ public class CalculatorPage extends BasePage {
 
         if (splitSliderContainer.getVisibility() == View.VISIBLE)
         {
-            // Animate out
-            splitSliderContainer.animate()
-                    .alpha(0f)
-                    .scaleY(0.8f)
-                    .setDuration(200)
-                    .setInterpolator(new android.view.animation.AccelerateInterpolator())
-                    .withEndAction(() -> {
-                        splitSliderContainer.setVisibility(View.GONE);
-                        splitSliderContainer.setScaleY(1f);
-                    })
-                    .start();
-
-            splitKeyValueText.animate()
-                    .alpha(0f)
-                    .scaleY(0.8f)
-                    .setDuration(200)
-                    .setInterpolator(new android.view.animation.AccelerateInterpolator())
-                    .withEndAction(() -> {
-                        splitKeyValueText.setVisibility(View.GONE);
-                        splitKeyValueText.setScaleY(1f);
-                    })
-                    .start();
-
+            collapseView(splitSliderContainer);
+            collapseView(splitKeyValueText);
             this.app.getSettings().setSplitActive(false);
         }
         else
         {
-            // Set initial state before animating in
-            splitSliderContainer.setAlpha(0f);
-            splitSliderContainer.setScaleY(0.8f);
-            splitSliderContainer.setVisibility(View.VISIBLE);
-
-            splitKeyValueText.setAlpha(0f);
-            splitKeyValueText.setScaleY(0.8f);
-            splitKeyValueText.setVisibility(View.VISIBLE);
-
-            // Animate in
-            splitSliderContainer.animate()
-                    .alpha(1f)
-                    .scaleY(1f)
-                    .setDuration(200)
-                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                    .start();
-
-            splitKeyValueText.animate()
-                    .alpha(1f)
-                    .scaleY(1f)
-                    .setDuration(200)
-                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                    .start();
-
+            expandView(splitSliderContainer);
+            expandView(splitKeyValueText);
             this.app.getSettings().setSplitActive(true);
         }
+    }
+
+    private void expandView(View view)
+    {
+        view.measure(
+                View.MeasureSpec.makeMeasureSpec(layout.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        );
+        int targetHeight = view.getMeasuredHeight();
+
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        lp.height = 0;
+        view.setLayoutParams(lp);
+        view.setVisibility(View.VISIBLE);
+
+        ValueAnimator animator = ValueAnimator.ofInt(0, targetHeight);
+        animator.setDuration(220);
+        animator.setInterpolator(new android.view.animation.DecelerateInterpolator());
+        animator.addUpdateListener(va -> {
+            lp.height = (int) va.getAnimatedValue();
+            view.setLayoutParams(lp);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(Animator a) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                view.setLayoutParams(lp);
+            }
+        });
+        animator.start();
+    }
+
+    private void collapseView(View view)
+    {
+        int initialHeight = view.getHeight();
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+
+        ValueAnimator animator = ValueAnimator.ofInt(initialHeight, 0);
+        animator.setDuration(160);
+        animator.setInterpolator(new android.view.animation.AccelerateInterpolator());
+        animator.addUpdateListener(va -> {
+            lp.height = (int) va.getAnimatedValue();
+            view.setLayoutParams(lp);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(Animator a) {
+                view.setVisibility(View.GONE);
+            }
+        });
+        animator.start();
     }
 
     /**

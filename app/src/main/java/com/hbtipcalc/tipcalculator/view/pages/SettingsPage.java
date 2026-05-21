@@ -266,10 +266,10 @@ public class SettingsPage extends BasePage
         dropDown.setItems(options);
 
         RoundingFlag currentFlag = Settings.getInstance().getRoundFlag();
-        dropDown.setSelection(currentFlag.ordinal());
+        dropDown.setSelection(currentFlag.getValue());
 
         dropDown.addObserver((position, value) -> {
-            RoundingFlag flag = RoundingFlag.values()[position];
+            RoundingFlag flag = RoundingFlag.fromInt(position);
             Settings.getInstance().setRoundFlag(flag);
 
             CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
@@ -511,8 +511,8 @@ public class SettingsPage extends BasePage
     {
         TextView separator = new TextView(ctx);
         separator.setText(" ✦ ");
-        float separatorSize = this.app.getScreenProfile().getTextFontSize() - 6f;
-        separator.setTextSize(Math.max(8f, separatorSize));
+        float separatorSize = this.app.getScreenProfile().getTextFontSize() - 10f;
+        separator.setTextSize(Math.max(6f, separatorSize));
         separator.setTextColor(this.app.getCTheme().getTextColor());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

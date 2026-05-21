@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  * send them back to the UI. It also stores the relevant data for the calculator.
  */
 public class Calculator implements SliderObserver, TextBoxObserver {
-    private static final String[] CURRENCIES = { "$", "€", "£", "₹", "₣", "R", "kr" };
     private static final Pattern CURRENCY_PREFIX = Pattern.compile("^\\s*(?:\\$|€|£|₹|₱|฿|د\\.إ|₣|R|kr)\\s*");
     private final List<CalculatorObserver> observers;
 
@@ -56,9 +55,7 @@ public class Calculator implements SliderObserver, TextBoxObserver {
      */
     public void calculate()
     {
-        System.out.println("DEBUG: billAmt=" + billAmt + ", tipPercent=" + tipPercent + ", roundingFlag=" + roundingFlag);
         TipResult result = TipCalculator.calculate(billAmt, tipPercent, roundingFlag, splitCount);
-        System.out.println("DEBUG: result tip=" + result.getTip() + ", total=" + result.getTotal());
         notifyObservers(result);
     }
 

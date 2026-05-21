@@ -119,7 +119,7 @@ public enum CTheme
 
     // getter methods for fonts
     public Typeface getFont() { return FONT; }
-    public float getTileFontSize() { return TITLE_FS; }
+    public float getTitleFontSize() { return TITLE_FS; }
     public float getTextFontSize() { return TEXT_FS; }
     public float getNumPadBtnFontSize() { return NUM_PAD_BTN_FS; }
 
