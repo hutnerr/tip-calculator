@@ -9,6 +9,8 @@ This project was created as a hands-on way to strengthen Android development ski
 
 If you're interested, you can find it on the [Play Store](https://play.google.com/store/apps/details?id=com.hbtipcalc.tipcalculator) or you can download the APK through the [releases](https://github.com/hutnerr/tip-calculator/releases).
 
+> This project is completed and likely will not recieve any new features, only maintenance updates
+
 ## Features
 - **Rounding System**: Users can choose how the total after tip is rounded:
   - **Always Down**: rounds down (floor)
@@ -24,14 +26,7 @@ If you're interested, you can find it on the [Play Store](https://play.google.co
 - **Numpad**: Can choose between a standard or inverted numpad
 - **Offline**: Works completely offline, no internet needed
 - **Customizable**: Users can set up the app to their preferences
-
-## Future Plans
-- Additional Tip Selection Methods
-  - Preset and customizable buttons
-  - Typed in directly
-  - Carousel
-- Making it more friendly on very small and very large devices
-- Additional themes
+- **Tip Input Options**: Users can select between a slider and quick buttons for inputs
 
 ## Links
 - [Google Play Store](https://play.google.com/store/apps/details?id=com.hbtipcalc.tipcalculator)
