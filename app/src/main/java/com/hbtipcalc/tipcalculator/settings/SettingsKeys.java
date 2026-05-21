@@ -15,4 +15,5 @@ public class SettingsKeys
     public static final Preferences.Key<Integer> SPLIT_ACTIVE = PreferencesKeys.intKey("split_active"); // 0 for inactive, 1 for active
     public static final Preferences.Key<Integer> NUMPAD_INVERTED = PreferencesKeys.intKey("numpad_inverted"); // 0 for inactive, 1 for active
     public static final Preferences.Key<Integer> SPLIT_MAX = PreferencesKeys.intKey("split_max"); // int num of max people to split by
+    public static final Preferences.Key<Integer> TIP_INPUT_TYPE = PreferencesKeys.intKey("tip_input_type"); // 0=slider, 1=quick buttons
 }

@@ -34,6 +34,44 @@ public enum CTheme
             Color.parseColor("#c47a3e"),
             2
     ),
+
+    // custom themes — no external attribution required
+
+    FOREST(
+            Color.parseColor("#c8e6c5"),
+            Color.parseColor("#1b2d1e"),
+            Color.parseColor("#1b2d1e"),
+            Color.parseColor("#2d4a32"),
+            Color.parseColor("#52b788"),
+            3
+    ),
+
+    OCEAN(
+            Color.parseColor("#b8d8e8"),
+            Color.parseColor("#0d1f2d"),
+            Color.parseColor("#0d1f2d"),
+            Color.parseColor("#1b3a4b"),
+            Color.parseColor("#4fc3f7"),
+            4
+    ),
+
+    SAKURA(
+            Color.parseColor("#5a3040"),
+            Color.parseColor("#5a3040"),
+            Color.parseColor("#fdf0f5"),
+            Color.parseColor("#f0d5e5"),
+            Color.parseColor("#e8478f"),
+            5
+    ),
+
+    MIDNIGHT(
+            Color.parseColor("#e0e0e0"),
+            Color.parseColor("#121212"),
+            Color.parseColor("#121212"),
+            Color.parseColor("#1e1e1e"),
+            Color.parseColor("#00bcd4"),
+            6
+    ),
     ;
 
     // color vars

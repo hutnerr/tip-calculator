@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
@@ -16,6 +17,7 @@ import com.hbtipcalc.tipcalculator.R;
 import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.TipInputType;
 import com.hbtipcalc.tipcalculator.settings.Settings;
 import com.hbtipcalc.tipcalculator.util.Clogger;
 import com.hbtipcalc.tipcalculator.view.elements.ElementContainer;
@@ -25,6 +27,7 @@ import com.hbtipcalc.tipcalculator.view.elements.IconButton;
 import com.hbtipcalc.tipcalculator.view.elements.KeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.NumPad;
 import com.hbtipcalc.tipcalculator.view.elements.Slider;
+import com.hbtipcalc.tipcalculator.view.elements.QuickTipButtons;
 import com.hbtipcalc.tipcalculator.view.elements.SliderElementValueContainer;
 import com.hbtipcalc.tipcalculator.view.elements.SplitKeyValueText;
 import com.hbtipcalc.tipcalculator.view.elements.TextBox;
@@ -37,7 +40,7 @@ import com.hbtipcalc.tipcalculator.view.elements.TotalKeyValueText;
  * functionality, and calculated results including tip, total, and split amounts.
  */
 public class CalculatorPage extends BasePage {
-    private FrameLayout root;
+    private LinearLayout root;
     private LinearLayout layout;
     private Header header;
     private IconButton splitBtn;
@@ -69,14 +72,15 @@ public class CalculatorPage extends BasePage {
         this.t = app.getCTheme();
         this.calculator = app.getCalculator();
 
-        root = new FrameLayout(ctx);
+        root = new LinearLayout(ctx);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
 
         layout = new LinearLayout(ctx);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-        ));
 
         this.header = new Header(ctx, "Tip Calculator");
         generateSplitBtn();
@@ -88,15 +92,20 @@ public class CalculatorPage extends BasePage {
         generateShareField();
         generateResultsField();
 
-        root.addView(layout);
+        ScrollView scrollView = new ScrollView(ctx);
+        scrollView.setFillViewport(true);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0, 1f
+        ));
+        scrollView.addView(layout);
+        root.addView(scrollView);
 
         NumPad numPad = new NumPad(ctx, this.app.getSettings().isNumpadInverted());
-        FrameLayout.LayoutParams numPadParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-        );
-        numPadParams.gravity = Gravity.BOTTOM;
-        numPad.setLayoutParams(numPadParams);
+        numPad.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
 
         numPad.addObserver(billAmount);
 
@@ -251,12 +260,15 @@ public class CalculatorPage extends BasePage {
         splitSliderContainer.setValue(slider.getProgress() + " people");
     }
 
-    /**
-     * Creates and configures the tip percentage slider field.
-     * Sets the range from 0% to 50% and initializes to the default tip percentage
-     * from settings.
-     */
     private void generateTipPercentField()
+    {
+        if (this.app.getSettings().getTipInputType() == TipInputType.QUICK_BUTTONS)
+            generateQuickTipButtons();
+        else
+            generateTipSlider();
+    }
+
+    private void generateTipSlider()
     {
         Slider slider = new Slider(ctx, "tip");
         slider.setBounds(0, 50, true);
@@ -266,10 +278,23 @@ public class CalculatorPage extends BasePage {
 
         slider.addObserver(container);
         slider.addObserver(this.calculator);
-//        int defaultTipPc = Settings.getInstance().getTipPercentage();
         int defaultTipPc = this.calculator.getTipPercent();
         slider.setProgress(defaultTipPc);
         container.setValue(defaultTipPc + "%");
+    }
+
+    private void generateQuickTipButtons()
+    {
+        QuickTipButtons quickTipButtons = new QuickTipButtons(ctx);
+        int defaultTipPc = this.calculator.getTipPercent();
+
+        ElementValueContainer container = new ElementValueContainer(ctx, "Tip Percent", quickTipButtons, defaultTipPc + "%");
+        layout.addView(container);
+
+        quickTipButtons.addObserver((value, id) -> container.setValue(value + "%"));
+        quickTipButtons.addObserver(this.calculator);
+        quickTipButtons.addObserver((value, id) -> this.app.getSettings().setTipPercentage(value));
+        quickTipButtons.setCurrentTip(defaultTipPc);
     }
 
     /**

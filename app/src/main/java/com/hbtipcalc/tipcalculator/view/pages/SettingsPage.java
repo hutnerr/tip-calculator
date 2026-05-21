@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hbtipcalc.tipcalculator.MainActivity;
@@ -15,6 +16,7 @@ import com.hbtipcalc.tipcalculator.controllers.Calculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+import com.hbtipcalc.tipcalculator.models.TipInputType;
 import com.hbtipcalc.tipcalculator.settings.Settings;
 import com.hbtipcalc.tipcalculator.util.Clogger;
 import com.hbtipcalc.tipcalculator.view.elements.DropDown;
@@ -33,6 +35,7 @@ public class SettingsPage extends BasePage
 {
     private CalculatorApp app;
 
+    private ScrollView scrollView;
     private LinearLayout layout;
     private Header header;
 
@@ -45,7 +48,7 @@ public class SettingsPage extends BasePage
     private final String GITHUB_URL = "https://github.com/hutnerr/tip-calculator";
     private final String KOFI_URL = "https://ko-fi.com/hutner";
     private final String PRIVACY_POLICY = "https://www.hunter-baker.com/pages/other/tip-calculator-privacy-policy.html";
-    private final String VERSION = "V1.04";
+    private final String VERSION = "V1.05";
 
     /**
      * Constructs a new SettingsPage.
@@ -61,8 +64,16 @@ public class SettingsPage extends BasePage
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.app = app;
 
+        scrollView = new ScrollView(ctx);
+        scrollView.setFillViewport(true);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        ));
+
         layout = new LinearLayout(ctx);
         layout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(layout);
 
         this.header = new Header(ctx, "Settings");
 //        generateHelpBtn();
@@ -71,11 +82,12 @@ public class SettingsPage extends BasePage
         layout.addView(header);
 
         generateThemeOption();
+        generateTipInputTypeOption();
+        generateDefaultTipOption();
         generateRoundingOption();
         generateCurrencyOption();
-        generateNumpadOrientationOption();
-        generateDefaultTipOption();
         generateMaxSplitOption();
+        generateNumpadOrientationOption();
 
         generateFooterLinks();
         generateVersion();
@@ -91,7 +103,7 @@ public class SettingsPage extends BasePage
     @Override
     public View getView()
     {
-        return layout;
+        return scrollView;
     }
 
     /**
@@ -165,12 +177,31 @@ public class SettingsPage extends BasePage
      * Allows users to set their preferred default tip percentage from 0% to 50%.
      * Updates are saved to settings immediately.
      */
+    private void generateTipInputTypeOption()
+    {
+        DropDown dropDown = new DropDown(ctx);
+
+        String[] options = {"Slider", "Quick Buttons"};
+        dropDown.setItems(options);
+
+        TipInputType current = Settings.getInstance().getTipInputType();
+        dropDown.setSelection(current == TipInputType.QUICK_BUTTONS ? 1 : 0);
+
+        dropDown.addObserver((position, value) -> {
+            TipInputType type = position == 1 ? TipInputType.QUICK_BUTTONS : TipInputType.SLIDER;
+            Settings.getInstance().setTipInputType(type);
+        });
+
+        ElementContainer container = new ElementContainer(ctx, "Tip Input Type", dropDown);
+        layout.addView(container);
+    }
+
     private void generateDefaultTipOption()
     {
         Slider slider = new Slider(ctx, "tipsetting");
         slider.setBounds(0, 50, true);
 
-        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Default Tip Percent", slider, "%");
+        SliderElementValueContainer container = new SliderElementValueContainer(ctx, "Slider Default Percent", slider, "%");
         layout.addView(container);
 
         int defaultTipPc = Settings.getInstance().getTipPercentage();
@@ -371,14 +402,16 @@ public class SettingsPage extends BasePage
 
     private void generateFooterLinks()
     {
-        // spacer to push footer to bottom
+        // fixed minimum gap between last setting and footer
+        View minGap = new View(ctx);
+        minGap.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(20)));
+        layout.addView(minGap);
+
+        // flex spacer to push footer to bottom when there is extra space
         View flexSpacer = new View(ctx);
-        LinearLayout.LayoutParams flexSpacerParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-        flexSpacer.setLayoutParams(flexSpacerParams);
+        flexSpacer.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
         layout.addView(flexSpacer);
 
         int horizontalMargin = dpToPx(16);
@@ -477,8 +510,9 @@ public class SettingsPage extends BasePage
     private TextView createSeparator()
     {
         TextView separator = new TextView(ctx);
-        separator.setText(" | ");
-        separator.setTextSize(14);
+        separator.setText(" ✦ ");
+        float separatorSize = this.app.getScreenProfile().getTextFontSize() - 6f;
+        separator.setTextSize(Math.max(8f, separatorSize));
         separator.setTextColor(this.app.getCTheme().getTextColor());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

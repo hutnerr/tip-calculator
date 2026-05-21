@@ -7,6 +7,7 @@ import androidx.datastore.rxjava3.RxDataStore;
 import com.hbtipcalc.tipcalculator.math.TipCalculator;
 import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.RoundingFlag;
+import com.hbtipcalc.tipcalculator.models.TipInputType;
 import com.hbtipcalc.tipcalculator.models.TipResult;
 import com.hbtipcalc.tipcalculator.util.Clogger;
 
@@ -24,6 +25,7 @@ public class Settings
     private static final boolean DEFAULT_SPLIT_ACTIVE = false; // split must be toggled first
     private static final boolean DEFAULT_NUMPAD_STATE = false; // by default the numpad is not inverted
     private static final int DEFAULT_MAX_SPLIT = 10; // 10 people
+    private static final TipInputType DEFAULT_TIP_INPUT_TYPE = TipInputType.SLIDER;
 
     private int tipPercentage;
     private RoundingFlag roundFlag;
@@ -32,6 +34,7 @@ public class Settings
     private boolean splitActive;
     private boolean invertedNumpad;
     private int maxSplit;
+    private TipInputType tipInputType;
 
     private static Settings instance; // singleton
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -90,6 +93,9 @@ public class Settings
                 Integer maxSplitSetting = prefs.get(SettingsKeys.SPLIT_MAX);
                 this.maxSplit = maxSplitSetting != null ? maxSplitSetting : DEFAULT_MAX_SPLIT;
 
+                Integer tipInputValue = prefs.get(SettingsKeys.TIP_INPUT_TYPE);
+                this.tipInputType = tipInputValue != null ? TipInputType.fromInt(tipInputValue) : DEFAULT_TIP_INPUT_TYPE;
+
             }).get(); // wait for completion
             Clogger.info("Settings successfully loaded");
         }
@@ -102,6 +108,7 @@ public class Settings
             this.splitActive = DEFAULT_SPLIT_ACTIVE;
             this.invertedNumpad = DEFAULT_NUMPAD_STATE;
             this.maxSplit = DEFAULT_MAX_SPLIT;
+            this.tipInputType = DEFAULT_TIP_INPUT_TYPE;
         }
     }
 
@@ -114,6 +121,7 @@ public class Settings
         setSplitActive(DEFAULT_SPLIT_ACTIVE);
         setNumpadInverted(DEFAULT_NUMPAD_STATE);
         setMaxSplit(DEFAULT_MAX_SPLIT);
+        setTipInputType(DEFAULT_TIP_INPUT_TYPE);
         Clogger.info("Settings have been reset");
     }
 
@@ -125,6 +133,7 @@ public class Settings
     public boolean isSplitActive() { return splitActive; }
     public boolean isNumpadInverted() { return this.invertedNumpad; }
     public int getMaxSplit() { return this.maxSplit; }
+    public TipInputType getTipInputType() { return this.tipInputType; }
 
     // SETTER METHODS
     public void setTipPercentage(int percentage)
@@ -170,6 +179,12 @@ public class Settings
     {
         this.maxSplit = splitmax;
         saveValue(SettingsKeys.SPLIT_MAX, splitmax);
+    }
+
+    public void setTipInputType(TipInputType type)
+    {
+        this.tipInputType = type;
+        saveValue(SettingsKeys.TIP_INPUT_TYPE, type.getValue());
     }
 
     private <T> void saveValue(Preferences.Key<T> key, T value)

@@ -41,7 +41,7 @@ public class ElementValueContainer extends ElementContainer
         // right label: this is the "value"
         valueView = new TextView(ctx);
         valueView.setText(valueText);
-        valueView.setTextSize(t.getTextFontSize());
+        valueView.setTextSize(profile.getTextFontSize());
         valueView.setTextColor(t.getAccentColor());
         valueView.setTypeface(t.getFont());
         valueView.setGravity(Gravity.END); // we want to at the right side of the container

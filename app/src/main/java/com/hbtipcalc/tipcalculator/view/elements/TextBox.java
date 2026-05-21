@@ -5,8 +5,9 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class TextBox extends androidx.appcompat.widget.AppCompatTextView impleme
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.t = app.getCTheme();
+        ScreenProfile profile = app.getScreenProfile();
 
         String c = app.getSettings().getCurrency();
         this.formatter = new DecimalFormat(c + "0.00");
@@ -46,11 +48,12 @@ public class TextBox extends androidx.appcompat.widget.AppCompatTextView impleme
         value = 0.0;
         setText(formatter.format(value));
 
-        setTextSize(t.getTileFontSize());
+        setTextSize(profile.getTitleFontSize());
         setTextColor(t.getTextColor());
         setTypeface(t.getFont());
         setGravity(Gravity.END);
-        setPadding(30, 10, 30, 10);
+        setPadding(profile.getTextBoxHPadding(), profile.getTextBoxVPadding(),
+                   profile.getTextBoxHPadding(), profile.getTextBoxVPadding());
         setBackgroundColor(t.getBackgroundSecColor());
     }
 

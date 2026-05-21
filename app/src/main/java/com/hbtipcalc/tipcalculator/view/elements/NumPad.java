@@ -9,8 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class NumPad extends GridLayout
 
     private List<NumPadObserver> observers;
     private CTheme t;
+    private ScreenProfile profile;
 
     public NumPad(Context ctx)
     {
@@ -35,7 +37,11 @@ public class NumPad extends GridLayout
         setRowCount(4);
         setAlignmentMode(GridLayout.ALIGN_MARGINS);
         setUseDefaultMargins(true);
-        setPadding(24, 50, 24, 12);
+
+        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
+        this.profile = app.getScreenProfile();
+        int np = profile.getNumPadPadding();
+        setPadding(np, np, np, np);
 
         this.observers = new ArrayList<>();
 
@@ -59,7 +65,6 @@ public class NumPad extends GridLayout
             };
         }
 
-        CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.t = app.getCTheme();
 
         for (String key : keys)
@@ -101,9 +106,10 @@ public class NumPad extends GridLayout
 
         btn.setBackground(states);
 
-        btn.setTextSize(t.getNumPadBtnFontSize());
+        btn.setTextSize(profile.getNumPadBtnFontSize());
         btn.setTextColor(t.getTextColor());
-        btn.setPadding(0, 30, 0, 30);
+        int vPad = profile.getNumPadBtnVPadding();
+        btn.setPadding(0, vPad, 0, vPad);
     }
 
     private int adjustBrightness(int color, float factor)

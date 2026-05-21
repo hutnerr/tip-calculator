@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 /**
  * This is a container for an element. It also provides a label to use as the "Title" of the container.
@@ -19,6 +20,7 @@ public class ElementContainer extends LinearLayout
     protected final LinearLayout labelContainer;
     private final TextView labelView;
     protected final CTheme t;
+    protected final ScreenProfile profile;
 
     /**
      * Constructor.
@@ -33,10 +35,12 @@ public class ElementContainer extends LinearLayout
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         this.t = app.getCTheme();
+        this.profile = app.getScreenProfile();
 
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        setPadding(60, 10, 60, 10);
+        setPadding(profile.getContainerHPadding(), profile.getContainerVPadding(),
+                   profile.getContainerHPadding(), profile.getContainerVPadding());
 
         // layout for the top labels
         this.labelContainer = new LinearLayout(ctx);
@@ -46,7 +50,7 @@ public class ElementContainer extends LinearLayout
         // left label: this is the "title"
         labelView = new TextView(ctx);
         labelView.setText(labelText);
-        labelView.setTextSize(t.getTextFontSize());
+        labelView.setTextSize(profile.getTextFontSize());
         labelView.setTextColor(t.getAccentColor());
         labelView.setTypeface(t.getFont());
         labelView.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
@@ -56,7 +60,8 @@ public class ElementContainer extends LinearLayout
         // create the container which houses the actual element inside
         contentContainer = new LinearLayout(ctx);
         contentContainer.setOrientation(VERTICAL);
-        contentContainer.setPadding(20, 20, 20, 20);
+        int cp = profile.getContentPadding();
+        contentContainer.setPadding(cp, cp, cp, cp);
         contentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         GradientDrawable border = new GradientDrawable();

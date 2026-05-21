@@ -2,13 +2,12 @@ package com.hbtipcalc.tipcalculator.view.elements;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.TypedValue;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.graphics.drawable.DrawableCompat;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
 
 /**
  * This is a simple button which takes in an SVG as its visuals.
@@ -25,13 +24,9 @@ public class IconButton extends AppCompatImageButton
         super(ctx);
 
         setBackground(null); // remove ripple/gray background
-        setAdjustViewBounds(true);
-        setScaleType(ScaleType.CENTER_INSIDE);
+        setScaleType(ScaleType.FIT_CENTER);
 
-        // set to a static size
-        int size = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics()
-        );
+        int size = ((CalculatorApp) ctx.getApplicationContext()).getScreenProfile().getIconBtnSize();
         setLayoutParams(new ViewGroup.LayoutParams(size, size));
     }
 

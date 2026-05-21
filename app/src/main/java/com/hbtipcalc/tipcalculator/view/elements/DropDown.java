@@ -1,308 +1,266 @@
 package com.hbtipcalc.tipcalculator.view.elements;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Custom dropdown component for displaying and selecting items from a list.
- * Features a collapsible popup menu with themed styling and observer pattern
- * for selection change notifications.
+ * Inline expanding dropdown — no PopupWindow, no floating coordinate math.
+ * Tapping the header shows the item list directly below it in the same layout.
  */
 public class DropDown extends LinearLayout
 {
     private final List<DropDownObserver> observers;
     private final List<String> items;
     private final CTheme theme;
+    private final ScreenProfile profile;
+
     private final TextView selectedView;
     private final TextView arrowView;
     private final LinearLayout selectedContainer;
-    private PopupWindow popupWindow;
-    private int selectedPosition = 0;
+    private final LinearLayout itemsContainer;
 
-    /**
-     * Constructs a new DropDown component.
-     *
-     * @param ctx The application context
-     */
+    private int selectedPosition = 0;
+    private ValueAnimator currentAnimator;
+
     public DropDown(Context ctx)
     {
         super(ctx);
 
         this.observers = new ArrayList<>();
-        this.items = new ArrayList<>();
+        this.items     = new ArrayList<>();
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
-        this.theme = app.getCTheme();
+        this.theme   = app.getCTheme();
+        this.profile = app.getScreenProfile();
 
         setOrientation(VERTICAL);
-        setGravity(Gravity.CENTER_VERTICAL);
         setLayoutParams(new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT
-        ));
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-        // create a horizontal container for the text and arrow
+        // ── Header row (always visible) ───────────────────────────────────────
+
         selectedContainer = new LinearLayout(ctx);
         selectedContainer.setOrientation(HORIZONTAL);
         selectedContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT
-        ));
-        selectedContainer.setBackgroundColor(theme.getBackgroundSecColor());
-        selectedContainer.setPadding(20, 15, 20, 15);
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         selectedContainer.setGravity(Gravity.CENTER_VERTICAL);
 
-        // text view for selected item
+        int p = profile.getDropdownItemPadding();
+        selectedContainer.setPadding(p, p, p, p);
+        applyHeaderBg(true);
+
         selectedView = new TextView(ctx);
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                0,
-                LayoutParams.WRAP_CONTENT,
-                1f // takes up remaining space
-        );
-        selectedView.setLayoutParams(textParams);
+        selectedView.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LayoutParams.WRAP_CONTENT, 1f));
         selectedView.setTextColor(theme.getTextColor());
-        selectedView.setTextSize(theme.getTextFontSize());
+        selectedView.setTextSize(profile.getTextFontSize());
         selectedView.setTypeface(theme.getFont());
         selectedView.setGravity(Gravity.CENTER_VERTICAL);
         selectedView.setText("Select...");
 
-        // arrow view
         arrowView = new TextView(ctx);
         arrowView.setLayoutParams(new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
-        ));
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         arrowView.setTextColor(theme.getTextColor());
-        arrowView.setTextSize(theme.getTextFontSize());
+        arrowView.setTextSize(profile.getTextFontSize());
         arrowView.setText("▼");
-        arrowView.setPadding(10, 0, 0, 0);
+        arrowView.setPadding(dpToPx(8), 0, 0, 0);
 
         selectedContainer.addView(selectedView);
         selectedContainer.addView(arrowView);
-
-        selectedContainer.setOnClickListener(v -> toggleDropdown());
-
+        selectedContainer.setOnClickListener(v -> toggle());
         addView(selectedContainer);
+
+        // ── Items list (inline, hidden until opened) ──────────────────────────
+
+        itemsContainer = new LinearLayout(ctx);
+        itemsContainer.setOrientation(VERTICAL);
+        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, 0); // height starts at 0
+        itemsContainer.setLayoutParams(listParams);
+        itemsContainer.setVisibility(GONE);
+        itemsContainer.setClipToOutline(true);
+        addView(itemsContainer);
     }
 
-    /**
-     * Creates a view for an individual dropdown item.
-     *
-     * @param context The application context
-     * @param itemText The text to display for this item
-     * @param position The position of this item in the list
-     * @param isSelected Whether this item is currently selected
-     * @return A configured View for the dropdown item
-     */
-    protected View createItemView(Context context, String itemText, int position, boolean isSelected)
+    // ── Open / close ──────────────────────────────────────────────────────────
+
+    private void toggle()
     {
-        TextView itemView = new TextView(context);
-        itemView.setText(itemText);
-        itemView.setTextColor(theme.getTextColor());
-        itemView.setTextSize(theme.getTextFontSize());
-        itemView.setTypeface(theme.getFont());
-        itemView.setPadding(20, 20, 20, 20);
-        itemView.setBackgroundColor(theme.getBackgroundSecColor());
-
-        if (isSelected)
-        {
-            itemView.setBackgroundColor(theme.getAccentColor());
-            itemView.setTextColor(theme.getBackgroundColor());
-        }
-
-        return itemView;
+        if (itemsContainer.getVisibility() == VISIBLE) collapse();
+        else expand();
     }
 
-    /**
-     * Toggles the dropdown menu between open and closed states.
-     * Updates the arrow indicator accordingly.
-     */
-    private void toggleDropdown()
+    private void expand()
     {
-        if (popupWindow != null && popupWindow.isShowing())
-        {
-            popupWindow.dismiss();
-            arrowView.setText("▼");
-            return;
-        }
+        // Build item views first so we can measure the true height
+        itemsContainer.removeAllViews();
 
-        arrowView.setText("▲");
-        showDropdown();
-    }
-
-    /**
-     * Displays the dropdown popup menu with all available items.
-     * The popup is positioned below the selection container and includes
-     * rounded corners, themed styling, and scrolling for long lists.
-     */
-    private void showDropdown()
-    {
-        LinearLayout dropdownLayout = new LinearLayout(getContext());
-        dropdownLayout.setOrientation(VERTICAL);
-        dropdownLayout.setBackgroundColor(theme.getBackgroundSecColor());
-        dropdownLayout.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
-
-        // round corners with border
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(theme.getBackgroundSecColor());
-        drawable.setCornerRadii(new float[]{0, 0, 0, 0, 20, 20, 20, 20});
-        drawable.setStroke(dpToPx(3), theme.getAccentColor());
-        dropdownLayout.setBackground(drawable);
-        dropdownLayout.setClipToOutline(true);
+        View divider = new View(getContext());
+        divider.setLayoutParams(new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, dpToPx(1)));
+        divider.setBackgroundColor(theme.getAccentColor());
+        itemsContainer.addView(divider);
 
         for (int i = 0; i < items.size(); i++)
         {
-            final int position = i;
-            boolean isSelected = position == selectedPosition;
+            final int pos = i;
+            boolean   sel = (pos == selectedPosition);
 
-            View itemView = createItemView(getContext(), items.get(i), position, isSelected);
-
-            // round corners for the last item to match the outline
-            if (i == items.size() - 1)
-            {
-                GradientDrawable itemDrawable = new GradientDrawable();
-                itemDrawable.setColor(isSelected ? theme.getAccentColor() : theme.getBackgroundSecColor());
-                itemDrawable.setCornerRadii(new float[]{0, 0, 0, 0, 20, 20, 20, 20});
-                itemView.setBackground(itemDrawable);
-            }
-
-            itemView.setOnClickListener(v -> {
-                setSelection(position);
-                popupWindow.dismiss();
-                arrowView.setText("▼");
-            });
-
-            dropdownLayout.addView(itemView);
+            TextView item = new TextView(getContext());
+            item.setText(items.get(i));
+            item.setTextSize(profile.getTextFontSize());
+            item.setTypeface(theme.getFont());
+            int pp = profile.getDropdownItemPadding();
+            item.setPadding(pp, pp, pp, pp);
+            item.setBackgroundColor(sel ? theme.getAccentColor() : theme.getBackgroundSecColor());
+            item.setTextColor(sel ? theme.getBackgroundColor() : theme.getTextColor());
+            item.setOnClickListener(v -> setSelection(pos));
+            itemsContainer.addView(item);
         }
 
-        // wrap in ScrollView for scrolling
-        ScrollView scrollView = new ScrollView(getContext());
-        scrollView.addView(dropdownLayout);
-        scrollView.setVerticalScrollBarEnabled(true);
-        scrollView.setScrollbarFadingEnabled(false);
+        GradientDrawable listBg = new GradientDrawable();
+        listBg.setColor(theme.getBackgroundSecColor());
+        listBg.setCornerRadii(new float[]{0,0, 0,0, r(8),r(8), r(8),r(8)});
+        itemsContainer.setBackground(listBg);
 
-        // calculate max height
-        android.util.DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        int screenHeight = displayMetrics.heightPixels;
+        applyHeaderBg(false);
 
-        // simple max height - 40% of screen
-        int maxHeight = (int)(screenHeight * 0.4);
-        maxHeight = Math.max(maxHeight, dpToPx(150));
-
-        int width = selectedContainer.getWidth();
-
-        // create popup window with scrollable content
-        popupWindow = new PopupWindow(
-                scrollView,
-                width,
-                maxHeight,
-                true
+        // Measure the full height before making it visible
+        itemsContainer.measure(
+                View.MeasureSpec.makeMeasureSpec(getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         );
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setFocusable(true);
+        final int targetHeight = itemsContainer.getMeasuredHeight();
 
-        // dismiss listener to reset arrow
-        popupWindow.setOnDismissListener(() -> arrowView.setText("▼"));
+        final LinearLayout.LayoutParams lp =
+                (LinearLayout.LayoutParams) itemsContainer.getLayoutParams();
+        lp.height = 0;
+        itemsContainer.setVisibility(VISIBLE);
 
-        popupWindow.showAsDropDown(selectedContainer, 0, 15);
+        if (currentAnimator != null) currentAnimator.cancel();
+        currentAnimator = ValueAnimator.ofInt(0, targetHeight);
+        currentAnimator.setDuration(220);
+        currentAnimator.setInterpolator(new DecelerateInterpolator());
+        currentAnimator.addUpdateListener(va -> {
+            lp.height = (int) va.getAnimatedValue();
+            itemsContainer.setLayoutParams(lp);
+        });
+        currentAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(Animator a) {
+                lp.height = LayoutParams.WRAP_CONTENT;
+                itemsContainer.setLayoutParams(lp);
+            }
+        });
+        currentAnimator.start();
+
+        arrowView.animate()
+                .rotation(180f)
+                .setDuration(220)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
     }
 
-    /**
-     * Sets the items to display in the dropdown from an array.
-     * If items exist and a valid selection is set, updates the display.
-     *
-     * @param items The array of items to display
-     */
-    public void setItems(String[] items)
+    private void collapse()
+    {
+        final int initialHeight = itemsContainer.getHeight();
+        final LinearLayout.LayoutParams lp =
+                (LinearLayout.LayoutParams) itemsContainer.getLayoutParams();
+
+        if (currentAnimator != null) currentAnimator.cancel();
+        currentAnimator = ValueAnimator.ofInt(initialHeight, 0);
+        currentAnimator.setDuration(160);
+        currentAnimator.setInterpolator(new AccelerateInterpolator());
+        currentAnimator.addUpdateListener(va -> {
+            lp.height = (int) va.getAnimatedValue();
+            itemsContainer.setLayoutParams(lp);
+        });
+        currentAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(Animator a) {
+                itemsContainer.setVisibility(GONE);
+                lp.height = LayoutParams.WRAP_CONTENT;
+                itemsContainer.setLayoutParams(lp);
+            }
+        });
+        currentAnimator.start();
+
+        applyHeaderBg(true);
+
+        arrowView.animate()
+                .rotation(0f)
+                .setDuration(160)
+                .setInterpolator(new AccelerateInterpolator())
+                .start();
+    }
+
+    /** Rounded-corner background for the header row. Flat bottom when open. */
+    private void applyHeaderBg(boolean closed)
+    {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(theme.getBackgroundSecColor());
+        if (closed)
+            bg.setCornerRadius(r(8));
+        else
+            bg.setCornerRadii(new float[]{r(8),r(8), r(8),r(8), 0,0, 0,0});
+        selectedContainer.setBackground(bg);
+    }
+
+    // ── Public API ────────────────────────────────────────────────────────────
+
+    public void setItems(String[] newItems)
     {
         this.items.clear();
-        for (String item : items)
-        {
-            this.items.add(item);
-        }
-
-        if (items.length > 0 && selectedPosition < items.length)
-        {
-            selectedView.setText(items[selectedPosition]);
-        }
+        for (String s : newItems) this.items.add(s);
+        if (newItems.length > 0 && selectedPosition < newItems.length)
+            selectedView.setText(newItems[selectedPosition]);
     }
 
-    /**
-     * Sets the currently selected item by position.
-     * Notifies all registered observers of the selection change.
-     *
-     * @param position The index of the item to select
-     */
     public void setSelection(int position)
     {
-        if (position >= 0 && position < items.size())
-        {
-            selectedPosition = position;
-            selectedView.setText(items.get(position));
-            notifyObservers(position, items.get(position));
-        }
+        if (position < 0 || position >= items.size()) return;
+        selectedPosition = position;
+        selectedView.setText(items.get(position));
+        collapse();
+        notifyObservers(position, items.get(position));
     }
 
-    /**
-     * Notifies all registered observers of a selection change.
-     *
-     * @param position The position of the newly selected item
-     * @param value The value of the newly selected item
-     */
-    private void notifyObservers(int position, String value)
-    {
-        for (DropDownObserver observer : observers)
-        {
-            observer.handleDropDownChange(position, value);
-        }
-    }
-
-    /**
-     * Registers an observer to be notified of selection changes.
-     * Prevents duplicate registrations.
-     *
-     * @param obs The observer to add
-     */
     public void addObserver(DropDownObserver obs)
     {
-        if (obs != null && !observers.contains(obs))
-        {
-            observers.add(obs);
-        }
+        if (obs != null && !observers.contains(obs)) observers.add(obs);
     }
 
-    /**
-     * Unregisters an observer from selection change notifications.
-     *
-     * @param obs The observer to remove
-     */
     public void removeObserver(DropDownObserver obs)
     {
         observers.remove(obs);
     }
 
-    /**
-     * Converts density-independent pixels (dp) to actual pixels (px).
-     *
-     * @param dp The value in dp to convert
-     * @return The equivalent value in pixels
-     */
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private void notifyObservers(int position, String value)
+    {
+        for (DropDownObserver o : observers) o.handleDropDownChange(position, value);
+    }
+
     private int dpToPx(int dp)
     {
-        float density = getContext().getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
+        return Math.round(dp * getContext().getResources().getDisplayMetrics().density);
     }
+
+    private float r(int dp) { return dpToPx(dp); }
 }

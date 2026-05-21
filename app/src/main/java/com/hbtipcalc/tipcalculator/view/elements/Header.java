@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 /**
  * This is the top navbar on any given page.
@@ -42,6 +43,7 @@ public class Header extends LinearLayout {
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         CTheme t = app.getCTheme();
+        ScreenProfile profile = app.getScreenProfile();
 
         setOrientation(HORIZONTAL);
         LayoutParams params = new LayoutParams(
@@ -59,7 +61,7 @@ public class Header extends LinearLayout {
         // the title bar for the header itself
         titleView = new TextView(ctx);
         titleView.setText(title);
-        titleView.setTextSize(t.getTileFontSize());
+        titleView.setTextSize(profile.getTitleFontSize());
         titleView.setTextColor(t.getHeaderColor());
         titleView.setTypeface(t.getFont());
         LayoutParams titleParams = new LayoutParams(

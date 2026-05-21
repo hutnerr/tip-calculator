@@ -4,8 +4,9 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hbtipcalc.tipcalculator.models.CTheme;
 import com.hbtipcalc.tipcalculator.models.CalculatorApp;
+import com.hbtipcalc.tipcalculator.models.CTheme;
+import com.hbtipcalc.tipcalculator.models.ScreenProfile;
 
 /**
  * A class for key value support.
@@ -38,20 +39,22 @@ public class KeyValueText extends LinearLayout
 
         CalculatorApp app = (CalculatorApp) ctx.getApplicationContext();
         CTheme t = app.getCTheme();
+        ScreenProfile profile = app.getScreenProfile();
 
         setOrientation(LinearLayout.HORIZONTAL);
-        setPadding(60, 20, 60, 10);
+        setPadding(profile.getRowHPadding(), profile.getRowVPaddingTop(),
+                   profile.getRowHPadding(), profile.getRowVPaddingBottom());
 
         this.label = new TextView(ctx);
         this.label.setText(labelText);
         this.label.setTextColor(t.getAccentColor());
-        this.label.setTextSize(t.getTextFontSize());
+        this.label.setTextSize(profile.getTextFontSize());
         this.label.setTypeface(t.getFont());
 
         this.value = new TextView(ctx);
         this.value.setText(initialValue);
         this.value.setTextColor(t.getTextColor());
-        this.value.setTextSize(t.getTileFontSize());
+        this.value.setTextSize(profile.getTitleFontSize());
         this.value.setTypeface(t.getFont());
 
         if (stretch)
