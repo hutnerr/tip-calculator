@@ -43,13 +43,14 @@ This project includes portions of open-source color theme palettes:
 ## Screenshots
 <table>
   <tr>
-    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc1.jpg?v=4" /></td>
-    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc2.jpg?v=4" /></td>
-    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc3.jpg?v=4" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc1.jpg?v=5" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc2.jpg?v=5" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc3.jpg?v=5" /></td>
   </tr>
   <tr>
-    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc4.jpg?v=4" /></td>
-    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc5.jpg?v=4" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc4.jpg?v=5" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc5.jpg?v=5" /></td>
+    <td><img src="https://www.hunter-baker.com/assets/projects/tip_calculator/tc6.jpg?v=5" /></td>
     <td></td>
   </tr>
 </table>
